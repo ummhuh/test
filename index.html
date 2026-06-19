@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>Options Nerd</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-section">
+        <h2 class="title-area">Options Nerd</h2>
+        <button onclick="toggleLayout()" class="layout-toggle-btn">📱/💻 切換版面</button>
+    </div>
+
+    <div class="desktop-left-col">
+        <div id="block-inputs" class="inputs-area">
+            <div class="input-group">
+                <label for="priceMode">價格輸入模式:</label>
+                <select id="priceMode" onchange="togglePriceMode()">
+                    <option value="manual">手動輸入模式 (Manual)</option>
+                    <option value="random" selected>隨機生成模式 (Random)</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="strategySelector">選擇策略:</label>
+                <select id="strategySelector" onchange="onStrategyChange()">
+                    <optgroup label="看漲策略 (Bullish)">
+                        <option value="ShortPut">Short Put (賣出賣權)</option>
+                        <option value="BullPutSpread">Bull Put Spread (Credit Put)</option>
+                        <option value="PutRatioSpreadBull">Put Ratio Spread (看多型)</option>
+                        <option value="PutBWBBull">Put BWB (看多變形蝴蝶)</option>
+                        <option value="BullCallSpread">Bull Call Spread (Debit Call)</option>
+                    </optgroup>
+                    <optgroup label="看跌策略 (Bearish)">
+                        <option value="BearCallSpread">Bear Call Spread (Credit Call)</option>
+                        <option value="BearPutSpread">Bear Put Spread (Debit Put)</option>
+                        <option value="CallBWBBear">Call BWB (看空變形蝴蝶)</option>
+                    </optgroup>
+                    <optgroup label="中性策略 (Neutral)">
+                        <option value="IronCondor">Iron Condor (鐵兀鷹)</option>
+                        <option value="JadeLizard">Jade Lizard (玉蜥蜴)</option>
+                        <option value="Strangle">Short Strangle (賣出勒式)</option>
+                        <option value="CallButterfly">Call Butterfly (對稱蝴蝶)</option>
+                        <option value="PutButterfly">Put Butterfly (對稱蝴蝶)</option>
+                    </optgroup>
+                </select>
+            </div>
+            
+            <div id="dynamicInputs"></div>
+
+            <div id="coachPanelContainer" style="display: none; margin-top: 15px;"></div>
+            <div id="randomLogicContainer" style="display: none; margin-top: 15px;"></div>
+
+            <button id="randomRefreshBtn" onclick="randomRefresh()">🎲 隨機刷新參數</button>
+        </div>
+
+        <div id="block-quiz" class="quiz-area">
+            <h3>策略測驗系統</h3>
+            <div id="quizQuestion">請點擊生成題目。</div>
+            <div id="quizOptions"></div>
+            <p id="quizFeedback"></p>
+            <div class="quiz-buttons">
+                <button id="generateQuizBtn" onclick="generateQuiz()">生成題目</button>
+                <button id="checkAnswerBtn" onclick="checkAnswer()" style="display:none; background-color: #28a745;">提交答案</button>
+                <button id="refreshQuizBtn" onclick="generateQuiz()" style="display:none; background-color: #17a2b8;">刷新題目</button>
+                <button id="endQuizBtn" onclick="resetQuiz()" style="display:none; background-color: #dc3545;">結束測驗</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="desktop-right-col">
+        <div id="block-analysis" class="analysis-area relative">
+            <button id="copyStrategyBtn" onclick="copyStrategySummary()" class="copy-btn">📋 複製策略摘要</button>
+            
+            <h3>策略分析與詳細推導</h3>
+            
+            <div class="data-row">
+                <p>安全邊際 (Margin of Safety): <span id="marginOfSafetyValue" style="color: #ffc107;">—</span></p>
+                <p id="marginOfSafetyFormulaDisplay" class="formula-text">—</p>
+            </div>
+            <div class="data-row">
+                <p>預期波動區間 (1 SD Expected Move): <span id="expectedMoveValue" style="color: #17a2b8;">—</span></p>
+                <p id="expectedMoveFormulaDisplay" class="formula-text">—</p>
+            </div>
+            <hr style="border: 0; border-top: 1px dashed #666; margin: 10px 0 15px 0;">
+
+            <div class="data-row">
+                <p>策略關鍵價差 (Strike Diff): <span id="strikeDiffValue" style="color: #ffc107;">—</span></p>
+                <p id="strikeDiffFormulaDisplay" class="formula-text">—</p>
+            </div>
+            <hr style="border: 0; border-top: 1px solid #444; margin: 15px 0;">
+            <div class="data-row">
+                <p>淨收支 (Net Premium): <span id="netPremiumDisplay" style="color: #fff;">—</span></p>
+                <p id="netPremiumFormulaDisplay" class="formula-text">—</p>
+            </div>
+            <div class="data-row">
+                <p>現有股價損益 (S0 P/L): <span id="currentPLDisplay" style="color: #00ffff;">—</span></p>
+                <p id="currentPLFormulaDisplay" class="formula-text">—</p>
+            </div>
+            <div class="data-row">
+                <p>損益平衡點 (B.E.P.): <span id="breakeven" style="color: #fff;">—</span></p>
+                <p id="bepFormulaDisplay" class="formula-text">—</p> 
+            </div>
+            <div class="data-row">
+                <p>最大獲利 (Max Profit): <span id="maxProfit" style="color: #28a745;">—</span></p>
+                <p id="maxProfitFormulaDisplay" class="formula-text">—</p>
+            </div>
+            <div class="data-row">
+                <p>最大損失 (Max Loss): <span id="maxLoss" style="color: #dc3545;">—</span></p>
+                <p id="maxLossFormulaDisplay" class="formula-text">—</p>
+            </div>
+        </div>
+        
+        <div id="block-chart" class="chart-wrapper">
+            <div class="legend-tic-area">
+                <label class="legend-item">
+                    <input type="checkbox" id="ticS0" checked onchange="updateChartVisibility()">
+                    <span class="dot" style="background-color: #ffffff; width: 10px; height: 10px; border-radius: 50%; display: inline-block; border: 1px solid #fff;"></span> 
+                    現股 S0: $<span id="legS0Value">—</span> | 損益: $<span id="legS0PLValue">—</span>
+                </label>
+                <label class="legend-item">
+                    <input type="checkbox" id="ticBEP" checked onchange="updateChartVisibility()">
+                    <span class="dot" style="background-color: #007bff; width: 10px; height: 10px; border-radius: 50%; display: inline-block; border: 1px solid #fff;"></span> 
+                    損益平衡點 (BEP<span id="legBEPText"></span>)
+                </label>
+                <label class="legend-item">
+                    <input type="checkbox" id="tic1SD" checked onchange="updateChartVisibility()">
+                    <span style="background-color: rgba(255,255,255,0.2); border: 1px dashed rgba(255,255,255,0.5); width: 14px; height: 10px; display: inline-block;"></span> 
+                    1 倍標準差區間<span id="leg1SDText"></span>
+                </label>
+                <label class="legend-item">
+                    <span class="dot" style="background-color: #28a745; width: 10px; height: 10px; border-radius: 50%; display: inline-block; border: 1px solid #fff;"></span> 
+                    最大獲利: <span id="legMaxProfitValue">—</span>
+                </label>
+                <label class="legend-item">
+                    <span class="dot" style="background-color: #dc3545; width: 10px; height: 10px; border-radius: 50%; display: inline-block; border: 1px solid #fff;"></span> 
+                    最大損失: <span id="legMaxLossValue">—</span>
+                </label>
+                
+                <div class="chart-action-buttons">
+                    <button id="chartRefreshBtn" onclick="randomRefresh()" class="chart-refresh-btn" style="display: none;">🎲 刷新參數</button>
+                    <button onclick="resetChartZoom()" class="reset-zoom-btn">🔍 重設縮放</button>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <div class="canvas-wrapper">
+                    <canvas id="profitChart"></canvas>
+                </div>
+                <div class="zoom-hint">💡 提示：將游標移至圖表上，滾動滑鼠滾輪即可全域縮放，按住滑鼠左鍵可任意拖曳平移！</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="greeksModal" class="modal-overlay" onclick="if(event.target === this) closeGreeksModal()">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeGreeksModal()">&times;</button>
+        <h2 id="greeksModalTitle" style="color: #fff; margin-top: 0; border-bottom: 2px solid #0099ff; padding-bottom: 10px; font-weight: normal; margin-right: 30px;">策略實戰指南</h2>
+        <div id="greeksModalBody" style="margin-top: 20px; line-height: 1.6; color: #ccc;"></div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
