@@ -21,7 +21,7 @@ const strategyConfigs = {
         greekGuide: `<div style="margin-bottom: 15px;"><h4 style="color: #0099ff; margin-bottom: 5px;">📊 總體希臘字母特性</h4><p>Delta: 正 (+) | Theta: 正 (+) | Vega: 負 (-)<br>由於買入保險腿抵銷了部分風險，Vega 與 Gamma 的衝擊較單腿 Short Put 小得多。</p></div><div style="margin-bottom: 15px;"><h4 style="color: #0099ff; margin-bottom: 5px;">🎯 履約價挑選指南</h4><ul style="padding-left: 20px;"><li style="margin-bottom: 5px;">Short Put (K2): 作為主要獲利來源，建議挑選 Delta -0.20 ~ -0.30 的履約價。</li><li style="margin-bottom: 5px;">Long Put (K1): 作為防護腳，挑選 Delta -0.05 ~ -0.10 的合約。</li></ul></div><div><h4 style="color: #0099ff; margin-bottom: 5px;">💡 實戰眉角</h4><p>實戰中應設定總保費的 2 倍作為停損點，避免一次大跌吃掉數次獲利。</p></div>`
     },
     PutRatioSpreadBull: { 
-        name: "Put Ratio Spread (Bull)", desc: "策略偏多，具備強大下檔防護墊，適合預期股價微跌或持平。", 
+        name: "Put Ratio Spread", desc: "策略偏多，具備強大下檔防護墊，適合預期股價微跌或持平。", 
         rules: ["履約價 (K)：K2 < K1 <= S0 (買入腳 K1 接近現價，賣出兩口腳 K2 於更深價外)", "權利金 (P)：P2 < P1 (遠價外 P2 較便宜)", "建倉性質：必須達成零成本或淨收入，且確保最大虧損不可為 0。"],
         adjustHint: "已確保 K1 在現價之下 (OTM)，並將 K2 推離安全區，以確保上行空間達到零成本無風險狀態。",
         legs: [{id:'K1',label:'Long Put K1'},{id:'P1',label:'P1'},{id:'K2',label:'Short Put K2 (x 2)'},{id:'P2',label:'P2'}],
@@ -126,7 +126,7 @@ const strategyConfigs = {
     },
     CallButterfly: { 
         name: "Call Butterfly", desc: "策略高度中立，適合預期股價結算時精準落在中間履約價。", 
-        rules: ["履約價 (K)：K1 < K2 < K3，且 K2 必須極度貼近現價 S0。", "翅膀邏輯：左右完全等寬，即 (K2-K1) = (K3-K2)", "建倉性質：Net Debit = (P1 + P3) - 2 * P2 > 0 (維持 Debit，確保這是有成本的風險策略)"],
+        rules: ["履約價 (K)：K1 < K2 < K3，且 K2 必須貼近現價 S0。", "翅膀邏輯：左右完全等寬，即 (K2-K1) = (K3-K2)", "建倉性質：Net Debit = (P1 + P3) - 2 * P2 > 0"],
         adjustHint: "這是一個定點狙擊策略。已將 K2 對準現價附近，並確保左右兩翼完全等寬。",
         legs: [{id:'K1',label:'Long Call K1'},{id:'P1',label:'P1'},{id:'K2',label:'Short Call K2 (x 2)'},{id:'P2',label:'P2'},{id:'K3',label:'Long Call K3'},{id:'P3',label:'P3'}],
         greekGuide: `
@@ -143,7 +143,7 @@ const strategyConfigs = {
     },
     PutButterfly: { 
         name: "Put Butterfly", desc: "策略高度中立，適合預期股價結算時精準落在中間履約價。", 
-        rules: ["履約價 (K)：K1 < K2 < K3，且 K2 必須極度貼近現價 S0。", "翅膀邏輯：左右完全等寬，即 (K2-K1) = (K3-K2)", "建倉性質：Net Debit = (P1 + P3) - 2 * P2 > 0 (維持 Debit，確保這是有成本的風險策略)"],
+        rules: ["履約價 (K)：K1 < K2 < K3，且 K2 必須貼近現價 S0。", "翅膀邏輯：左右完全等寬，即 (K2-K1) = (K3-K2)", "建倉性質：Net Debit = (P1 + P3) - 2 * P2 > 0"],
         adjustHint: "這是一個定點狙擊策略。已將 K2 對準現價附近，並確保左右兩翼完全等寬。",
         legs: [{id:'K1',label:'Long Put K1'},{id:'P1',label:'P1'},{id:'K2',label:'Short Put K2 (x 2)'},{id:'P2',label:'P2'},{id:'K3',label:'Long Put K3'},{id:'P3',label:'P3'}],
         greekGuide: `
@@ -310,7 +310,6 @@ function calculatePLData(strategy, params) {
     return { data: res, netPremium: net, netPremiumFormula: nF, maxProfit: dispMP, maxLoss: dispML, maxProfitFormula: mPF, maxLossFormula: mLF, bepFormula: bF, breakeven: bR, S0, IV, DTE, strategy, sDiffText: sDiff, sDiffFormula: sdF, currentPLValue: cPV.toFixed(2), currentPLFormula: cPF };
 }
 
-// ⭐ 精準實戰級隨機參數產生器 (確保無套利與符合市場定價)
 function generateLogicParams(strategy, S0, IV, DTE) {
     const p = {}; let safetyCheck = false;
     p.IV = IV; p.DTE = DTE; 
@@ -344,7 +343,6 @@ function generateLogicParams(strategy, S0, IV, DTE) {
                 if (p.K2 >= p.K1) p.K2 = roundK(p.K1 - 2.11);
                 p.P1 = rand(3, 6);
                 let minP2_prs = (p.P1 / 2) + 0.1;
-                // 強制防止套利：Net Credit 必須小於翼展 (K1-K2)
                 let maxP2_prs = Math.min(p.P1 - 0.1, (p.K1 - p.K2 + p.P1) / 2 - 0.1);
                 if(minP2_prs >= maxP2_prs) { p.K2 -= 2; maxP2_prs = Math.min(p.P1 - 0.1, (p.K1 - p.K2 + p.P1) / 2 - 0.1); }
                 p.P2 = rand(minP2_prs, maxP2_prs); 
@@ -356,7 +354,6 @@ function generateLogicParams(strategy, S0, IV, DTE) {
                 p.P3 = rand(4, 8);
                 p.P1 = rand(0.5, p.P3 - 1.5);
                 let minP2_pbwb = (p.P1 + p.P3) / 2 + 0.1;
-                // 強制防止套利：Net Credit 必須小於斷翼差額
                 let maxP2_pbwb = Math.min(p.P3 - 0.1, ((p.K2 - p.K1) - (p.K3 - p.K2) + p.P1 + p.P3) / 2 - 0.05);
                 if(minP2_pbwb >= maxP2_pbwb) { 
                     p.K1 -= 2; 
@@ -371,7 +368,6 @@ function generateLogicParams(strategy, S0, IV, DTE) {
                 p.P1 = rand(4, 8);
                 p.P3 = rand(0.5, p.P1 - 1.5);
                 let minP2_cbwb = (p.P1 + p.P3) / 2 + 0.1;
-                // 強制防止套利：Net Credit 必須小於斷翼差額
                 let maxP2_cbwb = Math.min(p.P1 - 0.1, ((p.K3 - p.K2) - (p.K2 - p.K1) + p.P1 + p.P3) / 2 - 0.05);
                 if(minP2_cbwb >= maxP2_cbwb) { 
                     p.K3 += 2; 
@@ -433,7 +429,6 @@ function generateLogicParams(strategy, S0, IV, DTE) {
     return { params: p, logicText: logicText };
 }
 
-// ⭐ 教練嚴格化檢驗 (防呆與防套利護欄)
 function validateStrategyAndRenderCoach(analysis) {
     const { strategy, S0, IV, DTE, netPremium } = analysis;
     const isAllZero = (S0 === 0);
@@ -495,7 +490,6 @@ function validateStrategyAndRenderCoach(analysis) {
         fields.forEach(f => errorFields.add(f));
     };
 
-    // ⭐ 最嚴苛的策略防呆與防套利檢測
     switch (strategy) {
         case 'ShortPut':
             if (P1 <= 0) addError(['P1'], `必須收取權利金 (P1 > 0)。`);
@@ -518,7 +512,7 @@ function validateStrategyAndRenderCoach(analysis) {
             break;
         case 'BearPutSpread':
             if (K1 >= K2) addError(['K1', 'K2'], `K1 (賣出停利) 必須小於 K2 (買入攻擊)。`);
-            if (K2 >= S0) addError(['K2'], `K2 (買入腳) 必須小於現價 (S0)，確保在價外建倉。`);
+            if (K2 > S0) addError(['K2'], `K2 (買入腳) 必須不大於現價 (S0)，確保在價外或平值。`);
             if (P1 >= P2) addError(['P1', 'P2'], `P1 應該比 P2 便宜。`);
             if (netPremium >= 0) addError(['P1', 'P2'], `此策略應為淨支出 (Debit)。`);
             break;
@@ -574,7 +568,6 @@ function validateStrategyAndRenderCoach(analysis) {
             if ((K2-K1) <= (K3-K2)) addError(['K1', 'K2', 'K3'], `左側翼展必須大於右側，否則無法擠出 Credit。`);
             if (P1 >= P2 || P2 >= P3) addError(['P1', 'P2', 'P3'], `權利金應符合 P1 < P2 < P3。`);
             if (netPremium <= 0) addError(['P1', 'P2', 'P3'], `嚴重錯誤：必須為淨收入 (Credit) 才能確保上漲無風險。`);
-            // ⭐ 修正防套利條件：Net Credit 必須小於 兩側翼展的差額
             if (netPremium >= ((K2 - K1) - (K3 - K2))) addError(['P1', 'P2', 'P3'], `定價錯誤：淨收入不得大於最大可能虧損邊界 (${((K2 - K1) - (K3 - K2)).toFixed(2)})，否則產生無風險套利空間！`);
             if (K2 > lower1SD) warnings.push(`您的主要賣出腳 (K2) 距離現價太近，下檔防禦不足。`);
             break;
@@ -584,7 +577,6 @@ function validateStrategyAndRenderCoach(analysis) {
             if ((K3-K2) <= (K2-K1)) addError(['K1', 'K2', 'K3'], `右側翼展必須大於左側，否則無法擠出 Credit。`);
             if (P1 <= P2 || P2 <= P3) addError(['P1', 'P2', 'P3'], `權利金應符合 P1 > P2 > P3。`);
             if (netPremium <= 0) addError(['P1', 'P2', 'P3'], `嚴重錯誤：必須為淨收入 (Credit) 才能確保下跌無風險。`);
-            // ⭐ 修正防套利條件：Net Credit 必須小於 兩側翼展的差額
             if (netPremium >= ((K3 - K2) - (K2 - K1))) addError(['P1', 'P2', 'P3'], `定價錯誤：淨收入不得大於最大可能虧損邊界 (${((K3 - K2) - (K2 - K1)).toFixed(2)})，否則產生無風險套利空間！`);
             if (K2 < upper1SD) warnings.push(`您的主要賣出腳 (K2) 距離現價太近，上檔防禦不足。`);
             break;
@@ -775,11 +767,11 @@ function analyzeSpread() {
         const evalResult = validateStrategyAndRenderCoach(currentAnalysis);
 
         if (evalResult.status === 'empty') {
-            coachContainer.innerHTML = `<div class="coach-prompt-box">💡 教練提示：<br>請先填寫 標的現價 (S0)、標的 ATM IV %、到期天數 (DTE)，教練才能為您計算出 1 SD 市場預期波動區間喔！</div>`;
+            coachContainer.innerHTML = `<div class="coach-prompt-box">💡 <b>教練提示：</b><br>請先填寫 <b>標的現價 (S0)、標的 ATM IV %、到期天數 (DTE)</b>，教練才能為您計算出 1 SD 市場預期波動區間喔！</div>`;
         } else if (evalResult.status === 'incomplete') {
             coachContainer.innerHTML = `
                 <div class="coach-prompt-box">
-                    🎯 教練提示：<br>目前的 1 SD 區間為 $${evalResult.lower1SD.toFixed(2)} ~ $${evalResult.upper1SD.toFixed(2)}。<br>不知道履約價該怎麼設定嗎？點擊下方按鈕，教練為您示範一組高勝率的參考配置！
+                    🎯 <b>教練提示：</b><br>目前的 1 SD 區間為 <b>$${evalResult.lower1SD.toFixed(2)} ~ $${evalResult.upper1SD.toFixed(2)}</b>。<br>不知道履約價該怎麼設定嗎？點擊下方按鈕，教練為您示範一組高勝率的參考配置！
                 </div>
                 <div class="action-buttons">
                     <button onclick="clearAllInputs()" class="clear-btn">🧹 清除重置</button>
@@ -787,7 +779,7 @@ function analyzeSpread() {
                 </div>
             `;
         } else if (evalResult.status === 'error') {
-            let warnHtml = `<div class="risk-alert-box">❌ 參數邏輯錯誤：<ul>`;
+            let warnHtml = `<div class="risk-alert-box"><strong>❌ 參數邏輯錯誤：</strong><ul>`;
             evalResult.errors.forEach(w => warnHtml += `<li>${w}</li>`);
             warnHtml += `</ul><div style="margin-top:8px; font-size:0.95em; color:#ccc;">請修正紅框標示的欄位，或讓教練為您重新配置標準參數。</div></div>
             <div class="action-buttons">
@@ -796,7 +788,7 @@ function analyzeSpread() {
             </div>`;
             coachContainer.innerHTML = warnHtml;
         } else if (evalResult.status === 'warning') {
-            let warnHtml = `<div class="risk-alert-box" style="border-left-color: #ffc107;">⚠️ 實戰風險警告：<ul>`;
+            let warnHtml = `<div class="risk-alert-box" style="border-left-color: #ffc107;"><strong>⚠️ 實戰風險警告：</strong><ul>`;
             evalResult.warnings.forEach(w => warnHtml += `<li style="color:#ffc107;">${w}</li>`);
             warnHtml += `</ul><div style="margin-top:8px; font-size:0.95em; color:#ccc;">您可以在真實市場中手動調整，或點擊下方由教練為您修復。</div></div>
             <div class="action-buttons">
@@ -807,12 +799,12 @@ function analyzeSpread() {
         } else {
             if (justSmartAdjusted) {
                 coachContainer.innerHTML = `
-                <div class="smart-adjust-success">✅ 智能調整完畢！<br>已為您配置符合標準圖形且推移至安全邊界的實戰參數。<br><br>💡 ${strategyConfigs[strategy].adjustHint || "請觀察圖表與數值變化，這是在真實市場中提高勝率的標準配置。"}</div>
+                <div class="smart-adjust-success">✅ <b>智能調整完畢！</b><br>已為您配置符合標準圖形且推移至安全邊界的實戰參數。<br><br>💡 <b>${strategyConfigs[strategy].adjustHint || "請觀察圖表與數值變化，這是在真實市場中提高勝率的標準配置。"}</b></div>
                 <div class="action-buttons"><button onclick="clearAllInputs()" class="clear-btn" style="flex: 1;">🧹 清除重置</button></div>`;
                 justSmartAdjusted = false;
             } else {
                 coachContainer.innerHTML = `
-                <div class="smart-adjust-success">✅ 教練檢測通過！<br>您的配置非常優秀！參數完全符合策略邏輯與防套利風控，這能為您確保高勝率的基礎。</div>
+                <div class="smart-adjust-success">✅ <b>教練檢測通過！</b><br>您的配置非常優秀！參數完全符合策略邏輯與防套利風控，這能為您確保高勝率的基礎。</div>
                 <div class="action-buttons"><button onclick="clearAllInputs()" class="clear-btn" style="flex: 1;">🧹 清除重置</button></div>`;
             }
         }
@@ -1020,6 +1012,26 @@ function drawChart(analysis) {
         },
         plugins: [{
             id: 'chartDecorations',
+            // ⭐ 修改：這裡加入了浮水印的繪製
+            beforeDraw: (chart) => {
+                if (isAllZero) return;
+                const { ctx, chartArea: { top, bottom, left, right } } = chart;
+                ctx.save();
+                
+                const strategyName = strategyConfigs[analysis.strategy].name;
+                
+                // 動態調整字體大小，避免在手機版太大
+                const fontSize = Math.min(45, (right - left) / 10);
+                
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.08)'; // 半透明白色
+                ctx.font = `bold ${fontSize}px Arial`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                
+                // 將文字畫在圖表正中央
+                ctx.fillText(strategyName, (left + right) / 2, (top + bottom) / 2);
+                ctx.restore();
+            },
             beforeDatasetsDraw: (chart) => {
                 if (!show1SD || analysis.S0 <= 0 || analysis.IV <= 0 || analysis.DTE <= 0 || isAllZero) return;
                 const {ctx, scales: {x, y}, chartArea: {top, bottom}} = chart;
