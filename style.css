@@ -1,6 +1,7 @@
 * { box-sizing: border-box; } 
 body { font-family: Arial, sans-serif; padding: 20px; background-color: #121212; color: #e0e0e0; margin: 0; overflow-x: hidden; }
 
+/* 預設橫式 (Desktop) 排版 */
 .container { width: 100%; max-width: 1400px; margin: 0 auto; background: #1e1e1e; padding: 25px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); display: grid; grid-template-columns: repeat(12, 1fr); gap: 25px; align-items: start; }
 
 .header-section { grid-column: 1 / 13; display: flex; justify-content: center; align-items: center; position: relative; margin-bottom: 5px; }
@@ -76,7 +77,6 @@ input[type="number"]:focus, select:focus { border-color: #0099ff; }
 .chart-container { background: #1e1e1e; padding: 15px; border-radius: 4px; height: 480px; width: 100%; display: flex; flex-direction: column; position: relative; }
 .canvas-wrapper { position: relative; flex-grow: 1; width: 100%; }
 
-/* ⭐ 修改：將縮放提示往上推近橫軸 */
 .zoom-hint { text-align: center; font-size: 0.85em; color: #888; margin-top: 0px; position: relative; z-index: 10; padding-bottom: 5px; }
 
 .legend-tic-area { display: flex; align-items: center; flex-wrap: wrap; gap: 20px; background: #2b2b2b; padding: 12px; border-radius: 4px; border-bottom: 2px solid #444; margin-top: 0; width: 100%; }
@@ -99,36 +99,47 @@ button:hover { background-color: #0077cc; }
 #quizFeedback { margin: 15px 0 0 0; min-height: 20px; }
 p, span, h2, h3, select, input { font-style: normal !important; font-weight: normal !important; }
 
+/* ================= 版面切換邏輯 ================= */
+
+/* 1. 小螢幕預設為「直式排版」，但若被加上 .force-horizontal 就不套用 */
 @media (max-width: 992px) {
-    body { padding: 10px 5px; }
-    .container { display: flex; flex-direction: column; gap: 20px; padding: 15px; }
-    .header-section { justify-content: flex-start; flex-wrap: wrap; gap: 15px; width: 100%; }
-    .layout-toggle-btn { position: static; margin-left: auto; }
-    .desktop-left-col, .desktop-right-col { display: contents; }
-    #block-inputs { order: 1; }
-    #block-analysis { order: 2; }
-    #block-chart { order: 3; }
-    #block-quiz { order: 4; }
-    .chart-container { height: 400px; padding: 10px; }
-    .legend-tic-area { flex-direction: column; align-items: flex-start; gap: 12px; }
-    .quiz-buttons { flex-direction: column; }
-    .env-params-grid { grid-template-columns: 1fr; } 
-    .copy-btn { position: static; width: 100%; margin-bottom: 15px; display: block; }
-    .action-buttons { flex-direction: column; }
-    .chart-action-buttons { margin-left: 0; width: 100%; flex-direction: column; }
-    .reset-zoom-btn, .chart-refresh-btn { width: 100%; text-align: center; }
+    .container:not(.force-horizontal) { display: flex; flex-direction: column; gap: 20px; padding: 15px; }
+    .container:not(.force-horizontal) .header-section { justify-content: flex-start; flex-wrap: wrap; gap: 15px; width: 100%; }
+    .container:not(.force-horizontal) .layout-toggle-btn { position: static; margin-left: auto; }
+    .container:not(.force-horizontal) .desktop-left-col, .container:not(.force-horizontal) .desktop-right-col { display: contents; }
+    .container:not(.force-horizontal) #block-inputs { order: 1; }
+    .container:not(.force-horizontal) #block-analysis { order: 2; }
+    .container:not(.force-horizontal) #block-chart { order: 3; }
+    .container:not(.force-horizontal) #block-quiz { order: 4; }
+    .container:not(.force-horizontal) .chart-container { height: 400px; padding: 10px; }
+    .container:not(.force-horizontal) .legend-tic-area { flex-direction: column; align-items: flex-start; gap: 12px; }
+    .container:not(.force-horizontal) .quiz-buttons { flex-direction: column; }
+    .container:not(.force-horizontal) .env-params-grid { grid-template-columns: 1fr; } 
+    .container:not(.force-horizontal) .copy-btn { position: static; width: 100%; margin-bottom: 15px; display: block; }
+    .container:not(.force-horizontal) .action-buttons { flex-direction: column; }
+    .container:not(.force-horizontal) .chart-action-buttons { margin-left: 0; width: 100%; flex-direction: column; }
+    .container:not(.force-horizontal) .reset-zoom-btn, .container:not(.force-horizontal) .chart-refresh-btn { width: 100%; text-align: center; }
 }
 
-.container.force-mobile { display: flex !important; flex-direction: column !important; max-width: 800px; gap: 20px; width: 100%; }
-.container.force-mobile .header-section { justify-content: flex-start; flex-wrap: wrap; gap: 15px; width: 100%; }
-.container.force-mobile .layout-toggle-btn { position: static; margin-left: auto; }
-.container.force-mobile .desktop-left-col, .container.force-mobile .desktop-right-col { display: contents !important; }
-.container.force-mobile #block-inputs { order: 1; }
-.container.force-mobile #block-analysis { order: 2; }
-.container.force-mobile #block-chart { order: 3; }
-.container.force-mobile #block-quiz { order: 4; }
-.container.force-mobile .quiz-buttons { flex-direction: column; }
-.container.force-mobile .env-params-grid { grid-template-columns: 1fr; }
-.container.force-mobile .copy-btn { position: static; width: 100%; margin-bottom: 15px; display: block; }
-.container.force-mobile .chart-action-buttons { margin-left: 0; width: 100%; flex-direction: column; }
-.container.force-mobile .reset-zoom-btn, .container.force-mobile .chart-refresh-btn { width: 100%; text-align: center; }
+/* 2. 電腦版手動強制切換為「直式排版」的 CSS (內容同上) */
+.container.force-vertical { display: flex !important; flex-direction: column !important; max-width: 800px; gap: 20px; width: 100%; margin: 0 auto; }
+.container.force-vertical .header-section { justify-content: flex-start; flex-wrap: wrap; gap: 15px; width: 100%; }
+.container.force-vertical .layout-toggle-btn { position: static; margin-left: auto; }
+.container.force-vertical .desktop-left-col, .container.force-vertical .desktop-right-col { display: contents !important; }
+.container.force-vertical #block-inputs { order: 1; }
+.container.force-vertical #block-analysis { order: 2; }
+.container.force-vertical #block-chart { order: 3; }
+.container.force-vertical #block-quiz { order: 4; }
+.container.force-vertical .chart-container { height: 400px; padding: 10px; }
+.container.force-vertical .legend-tic-area { flex-direction: column; align-items: flex-start; gap: 12px; }
+.container.force-vertical .quiz-buttons { flex-direction: column; }
+.container.force-vertical .env-params-grid { grid-template-columns: 1fr; }
+.container.force-vertical .copy-btn { position: static; width: 100%; margin-bottom: 15px; display: block; }
+.container.force-vertical .action-buttons { flex-direction: column; }
+.container.force-vertical .chart-action-buttons { margin-left: 0; width: 100%; flex-direction: column; }
+.container.force-vertical .reset-zoom-btn, .container.force-vertical .chart-refresh-btn { width: 100%; text-align: center; }
+
+/* 3. 手機版手動強制切換為「橫式排版」時，確保寬度足以容納兩欄，避免破版 */
+.container.force-horizontal {
+    min-width: 1100px; /* 撐開寬度讓瀏覽器出現水平捲動軸，維持完美橫式結構 */
+}

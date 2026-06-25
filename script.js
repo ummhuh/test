@@ -46,7 +46,7 @@ const strategyConfigs = {
         rules: ["履約價 (K)：S0 < K1 < K2 (收租的 K1 嚴格在現價之上，保險的 K2 更遠，兩腳皆在價外)", "權利金 (P)：P1 > P2 (靠近現價的 Call 比較貴)", "建倉性質：Net Credit = P1 - P2 > 0"],
         adjustHint: "已將賣出腳往上推離現價。若變成 Debit，請把保險腳 (K2) 拉更遠以獲得 Credit。",
         legs: [{id:'K1',label:'Short Call K1'},{id:'P1',label:'P1'},{id:'K2',label:'Long Call K2'},{id:'P2',label:'P2'}],
-        greekGuide: `<div style="margin-bottom: 15px;"><h4 style="color: #0099ff; margin-bottom: 5px;">📊 總體希臘字母特性</h4><p>Delta: 負 (-) | Theta: 正 (+) | Vega: 負 (-)<br>這是一個「只要不漲過壓力線就贏」的策略，時間站在你這邊。</p></div><div style="margin-bottom: 15px;"><h4 style="color: #0099ff; margin-bottom: 5px;">🎯 履約價挑選指南</h4><ul style="padding-left: 20px;"><li style="margin-bottom: 5px;">Short Call (K1): 建議設定在強大的壓力位上方，通常挑選 Delta +0.15 ~ +0.30 的價外合約。</li><li style="margin-bottom: 5px;">Long Call (K2): 作為防護腳，挑選 Delta +0.05 ~ +0.10 的合約。</li></ul></div><div><h4 style="color: #0099ff; margin-bottom: 5px;">💡 實戰眉角</h4><p>最適合預期股價遇壓不過、緩慢下跌或橫盤整理的盤勢。由於 Call 端的隱含波動率通常較低，收到的權利金可能不如 Bull Put 豐厚。</p></div>`
+        greekGuide: `<div style="margin-bottom: 15px;"><h4 style="color: #0099ff; margin-bottom: 5px;">📊 總體希臘字母特性</h4><p>Delta: 負 (-) | Theta: 正 (+) | Vega: 負 (-)<br>這是一個「只要不漲過壓力線就贏」策略，時間站在你這邊。</p></div><div style="margin-bottom: 15px;"><h4 style="color: #0099ff; margin-bottom: 5px;">🎯 履約價挑選指南</h4><ul style="padding-left: 20px;"><li style="margin-bottom: 5px;">Short Call (K1): 建議設定在強大的壓力位上方，通常挑選 Delta +0.15 ~ +0.30 的價外合約。</li><li style="margin-bottom: 5px;">Long Call (K2): 作為防護腳，挑選 Delta +0.05 ~ +0.10 的合約。</li></ul></div><div><h4 style="color: #0099ff; margin-bottom: 5px;">💡 實戰眉角</h4><p>最適合預期股價遇壓不過、緩慢下跌或橫盤整理的盤勢。由於 Call 端的隱含波動率通常較低，收到的權利金可能不如 Bull Put 豐厚。</p></div>`
     },
     BearPutSpread: { 
         name: "Bear Put Spread", desc: "策略偏空，適合預期股價將下跌並跌破低履約價。", 
@@ -1012,23 +1012,18 @@ function drawChart(analysis) {
         },
         plugins: [{
             id: 'chartDecorations',
-            // ⭐ 修改：這裡加入了浮水印的繪製
             beforeDraw: (chart) => {
                 if (isAllZero) return;
                 const { ctx, chartArea: { top, bottom, left, right } } = chart;
                 ctx.save();
                 
                 const strategyName = strategyConfigs[analysis.strategy].name;
-                
-                // 動態調整字體大小，避免在手機版太大
                 const fontSize = Math.min(45, (right - left) / 10);
                 
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.08)'; // 半透明白色
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
                 ctx.font = `bold ${fontSize}px Arial`;
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                
-                // 將文字畫在圖表正中央
                 ctx.fillText(strategyName, (left + right) / 2, (top + bottom) / 2);
                 ctx.restore();
             },
@@ -1082,11 +1077,42 @@ function drawChart(analysis) {
     });
 }
 
+// ================= 版面切換邏輯 (全新修改) =================
 function toggleLayout() {
     const container = document.querySelector('.container');
-    container.classList.toggle('force-mobile');
-    if (profitChartInstance) profitChartInstance.resize(); 
+    // 以 992px 為電腦/手機版界線
+    const isMobileView = window.innerWidth <= 992; 
+
+    if (isMobileView) {
+        // 目前為小螢幕 (預設是直式)
+        if (container.classList.contains('force-horizontal')) {
+            container.classList.remove('force-horizontal'); // 切回直式
+        } else {
+            container.classList.add('force-horizontal');    // 強制橫式
+            container.classList.remove('force-vertical');
+        }
+    } else {
+        // 目前為大螢幕 (預設是橫式)
+        if (container.classList.contains('force-vertical')) {
+            container.classList.remove('force-vertical');   // 切回橫式
+        } else {
+            container.classList.add('force-vertical');      // 強制直式
+            container.classList.remove('force-horizontal');
+        }
+    }
+
+    if (profitChartInstance) {
+        setTimeout(() => { profitChartInstance.resize(); }, 100);
+    }
 }
+
+// 監聽視窗大小改變，確保圖表自動適應，並在跨越裝置斷點時重繪圖表
+window.addEventListener('resize', () => {
+    if (profitChartInstance) {
+        profitChartInstance.resize();
+    }
+});
+// =======================================================
 
 function fallbackCopyTextToClipboard(text) {
     const textArea = document.createElement("textarea");
