@@ -25,14 +25,14 @@ const strategyConfigs = {
         rules: ["履約價 (K)：K2 < K1 <= S0 (買入腳 K1 接近現價，賣出兩口腳 K2 於更深價外)", "權利金 (P)：P2 < P1 (遠價外 P2 較便宜)", "建倉性質：必須達成零成本或淨收入，且確保最大虧損不可為 0。"],
         adjustHint: "已確保 K1 在現價之下 (OTM)，並將 K2 推離安全區，以確保上行空間達到零成本無風險狀態。",
         legs: [{id:'K1',label:'Long Put K1'},{id:'P1',label:'P1'},{id:'K2',label:'Short Put K2 (x 2)'},{id:'P2',label:'P2'}],
-        greekGuide: `<div style="margin-bottom: 15px;"><h4 style="color: #0099ff; margin-bottom: 5px;">📊 總體希臘字母特性</h4><p>Delta: 正 (+) | Theta: 正 (+) | Vega: 偏負 (-)<br>擁有獨特的「防護墊」設計，初期對小幅下跌免疫。</p></div><div style="margin-bottom: 15px;"><h4 style="color: #0099ff; margin-bottom: 5px;">🎯 履約價挑選指南</h4><ul style="padding-left: 20px;"><li style="margin-bottom: 5px;">Long Put (K1): 買入較接近現價的保險，建議挑選 Delta -0.40 ~ -0.50。</li><li style="margin-bottom: 5px;">Short Put (K2 x2): 賣出較價外的合約，建議挑選 Delta -0.15 ~ -0.25。</li></ul></div><div><h4 style="color: #0099ff; margin-bottom: 5px;">💡 實戰眉角</h4><p>只要建倉能達成 Zero Cost 或 Net Credit，此策略在上漲時將處於無敵狀態。但請注意下行風險無限，需具備接股意願才可使用。</p></div>`
+        greekGuide: `<div style="margin-bottom: 15px;"><h4 style="color: #0099ff; margin-bottom: 5px;">📊 總體希臘字母特性</h4><p>Delta: 正 (+) | Theta: 正 (+) | Vega: 偏負 (-)<br>擁有獨特的防護墊設計，初期對小幅下跌免疫。</p></div><div style="margin-bottom: 15px;"><h4 style="color: #0099ff; margin-bottom: 5px;">🎯 履約價挑選指南</h4><ul style="padding-left: 20px;"><li style="margin-bottom: 5px;">Long Put (K1): 買入較接近現價的保險，建議挑選 Delta -0.40 ~ -0.50。</li><li style="margin-bottom: 5px;">Short Put (K2 x2): 賣出較價外的合約，建議挑選 Delta -0.15 ~ -0.25。</li></ul></div><div><h4 style="color: #0099ff; margin-bottom: 5px;">💡 實戰眉角</h4><p>只要建倉能達成 Zero Cost 或 Net Credit，此策略在上漲時將處於無敵狀態。但請注意下行風險無限，需具備接股意願才可使用。</p></div>`
     },
     PutBWBBull: { 
         name: "Put BWB (Bull)", desc: "策略偏多，屬於進階不對稱保險，下行伴隨較大風險，適合預期股價持平或溫和上漲。", 
         rules: ["履約價 (K)：K1 < K2 < K3 <= S0 (全數價外建倉)", "翅膀邏輯：(K2 - K1) > (K3 - K2) (左翼大於右翼)", "建倉性質：必須為淨收入 (Net Credit > 0)，且確保防套利。"],
         adjustHint: "已確保左側價差大於右側，並將參數推離至安全區，擠出上漲無風險的淨收入 (Net Credit)。",
         legs: [{id:'K1',label:'Long Put K1'},{id:'P1',label:'P1'},{id:'K2',label:'Short Put K2 (x 2)'},{id:'P2',label:'P2'},{id:'K3',label:'Long Put K3'},{id:'P3',label:'P3'}],
-        greekGuide: `<div style="margin-bottom: 15px;"><h4 style="color: #0099ff; margin-bottom: 5px;">📊 總體希臘字母特性</h4><p>Delta: 偏正 (+) | Theta: 正 (+) | Vega: 負 (-)<br>這是一個「斷翼」的蝴蝶，透過承擔較大的單邊尾部風險，換取建倉時的淨收入。</p></div><div style="margin-bottom: 15px;"><h4 style="color: #0099ff; margin-bottom: 5px;">🎯 履約價挑選指南</h4><ul style="padding-left: 20px;"><li style="margin-bottom: 5px;">Short Put (K2 x2): 設定在預期股價「跌不破」的支撐位，通常 Delta -0.25 ~ -0.35。</li><li style="margin-bottom: 5px;">Long Put (K3): 買入較接近現價的保險，Delta -0.45 ~ -0.50。</li><li style="margin-bottom: 5px;">Long Put (K1): 斷翼防守腳，買入深價外超便宜合約，Delta -0.05 ~ -0.10。</li></ul></div><div><h4 style="color: #0099ff; margin-bottom: 5px;">💡 實戰眉角</h4><p>確保 K2-K1 的寬距 > K3-K2 的寬距，並透過此差異擠出 Net Credit。只要建倉有淨收入，股價不論暴漲多少你都是賺錢的。</p></div>`
+        greekGuide: `<div style="margin-bottom: 15px;"><h4 style="color: #0099ff; margin-bottom: 5px;">📊 總體希臘字母特性</h4><p>Delta: 偏正 (+) | Theta: 正 (+) | Vega: 負 (-)<br>這是一個斷翼的蝴蝶，透過承擔較大的單邊尾部風險，換取建倉時的淨收入。</p></div><div style="margin-bottom: 15px;"><h4 style="color: #0099ff; margin-bottom: 5px;">🎯 履約價挑選指南</h4><ul style="padding-left: 20px;"><li style="margin-bottom: 5px;">Short Put (K2 x2): 設定在預期股價跌不破的支撐位，通常 Delta -0.25 ~ -0.35。</li><li style="margin-bottom: 5px;">Long Put (K3): 買入較接近現價的保險，Delta -0.45 ~ -0.50。</li><li style="margin-bottom: 5px;">Long Put (K1): 斷翼防守腳，買入深價外超便宜合約，Delta -0.05 ~ -0.10。</li></ul></div><div><h4 style="color: #0099ff; margin-bottom: 5px;">💡 實戰眉角</h4><p>確保 K2-K1 的寬距 > K3-K2 的寬距，並透過此差異擠出 Net Credit。只要建倉有淨收入，股價不論暴漲多少你都是賺錢的。</p></div>`
     },
     BullCallSpread: { 
         name: "Bull Call Spread", desc: "策略偏多，適合預期股價將上漲並突破高履約價。", 
@@ -46,7 +46,7 @@ const strategyConfigs = {
         rules: ["履約價 (K)：S0 < K1 < K2 (收租的 K1 嚴格在現價之上，保險的 K2 更遠，兩腳皆在價外)", "權利金 (P)：P1 > P2 (靠近現價的 Call 比較貴)", "建倉性質：Net Credit = P1 - P2 > 0"],
         adjustHint: "已將賣出腳往上推離現價。若變成 Debit，請把保險腳 (K2) 拉更遠以獲得 Credit。",
         legs: [{id:'K1',label:'Short Call K1'},{id:'P1',label:'P1'},{id:'K2',label:'Long Call K2'},{id:'P2',label:'P2'}],
-        greekGuide: `<div style="margin-bottom: 15px;"><h4 style="color: #0099ff; margin-bottom: 5px;">📊 總體希臘字母特性</h4><p>Delta: 負 (-) | Theta: 正 (+) | Vega: 負 (-)<br>這是一個「只要不漲過壓力線就贏」策略，時間站在你這邊。</p></div><div style="margin-bottom: 15px;"><h4 style="color: #0099ff; margin-bottom: 5px;">🎯 履約價挑選指南</h4><ul style="padding-left: 20px;"><li style="margin-bottom: 5px;">Short Call (K1): 建議設定在強大的壓力位上方，通常挑選 Delta +0.15 ~ +0.30 的價外合約。</li><li style="margin-bottom: 5px;">Long Call (K2): 作為防護腳，挑選 Delta +0.05 ~ +0.10 的合約。</li></ul></div><div><h4 style="color: #0099ff; margin-bottom: 5px;">💡 實戰眉角</h4><p>最適合預期股價遇壓不過、緩慢下跌或橫盤整理的盤勢。由於 Call 端的隱含波動率通常較低，收到的權利金可能不如 Bull Put 豐厚。</p></div>`
+        greekGuide: `<div style="margin-bottom: 15px;"><h4 style="color: #0099ff; margin-bottom: 5px;">📊 總體希臘字母特性</h4><p>Delta: 負 (-) | Theta: 正 (+) | Vega: 負 (-)<br>這是一個只要不漲過壓力線就贏的策略，時間站在你這邊。</p></div><div style="margin-bottom: 15px;"><h4 style="color: #0099ff; margin-bottom: 5px;">🎯 履約價挑選指南</h4><ul style="padding-left: 20px;"><li style="margin-bottom: 5px;">Short Call (K1): 建議設定在強大的壓力位上方，通常挑選 Delta +0.15 ~ +0.30 的價外合約。</li><li style="margin-bottom: 5px;">Long Call (K2): 作為防護腳，挑選 Delta +0.05 ~ +0.10 的合約。</li></ul></div><div><h4 style="color: #0099ff; margin-bottom: 5px;">💡 實戰眉角</h4><p>最適合預期股價遇壓不過、緩慢下跌或橫盤整理的盤勢。由於 Call 端的隱含波動率通常較低，收到的權利金可能不如 Bull Put 豐厚。</p></div>`
     },
     BearPutSpread: { 
         name: "Bear Put Spread", desc: "策略偏空，適合預期股價將下跌並跌破低履約價。", 
@@ -62,10 +62,10 @@ const strategyConfigs = {
         legs: [{id:'K1',label:'Long Call K1'},{id:'P1',label:'P1'},{id:'K2',label:'Short Call K2 (x 2)'},{id:'P2',label:'P2'},{id:'K3',label:'Long Call K3'},{id:'P3',label:'P3'}],
         greekGuide: `
             <div style="margin-bottom: 15px;"><h4 style="color: #0099ff; margin-bottom: 5px;">📊 總體希臘字母特性</h4>
-            <p>Delta: 偏負 (-) | Theta: 正 (+) | Vega: 負 (-)<br>這是一個「斷翼」的買權蝴蝶，透過承擔上漲被軋空的尾部風險，換取建倉時的淨收入。</p></div>
+            <p>Delta: 偏負 (-) | Theta: 正 (+) | Vega: 負 (-)<br>這是一個斷翼的買權蝴蝶，透過承擔上漲被軋空的尾部風險，換取建倉時的淨收入。</p></div>
             <div style="margin-bottom: 15px;"><h4 style="color: #0099ff; margin-bottom: 5px;">🎯 履約價挑選指南</h4>
             <ul style="padding-left: 20px;">
-                <li style="margin-bottom: 5px;">Short Call (K2 x2): 設定在預期股價「漲不破」的壓力位，通常 Delta +0.25 ~ +0.35。</li>
+                <li style="margin-bottom: 5px;">Short Call (K2 x2): 設定在預期股價漲不破的壓力位，通常 Delta +0.25 ~ +0.35。</li>
                 <li style="margin-bottom: 5px;">Long Call (K1): 買入較接近現價的合約，Delta +0.45 ~ +0.50。</li>
                 <li style="margin-bottom: 5px;">Long Call (K3): 斷翼防守腳，Delta +0.05 ~ +0.10。</li>
             </ul></div>
@@ -97,7 +97,7 @@ const strategyConfigs = {
         legs: [{id:'K1',label:'Short Put K1'},{id:'P1',label:'P1'},{id:'K2',label:'Short Call K2'},{id:'P2',label:'P2'},{id:'K3',label:'Long Call K3'},{id:'P3',label:'P3'}],
         greekGuide: `
             <div style="margin-bottom: 15px;"><h4 style="color: #0099ff; margin-bottom: 5px;">📊 總體希臘字母特性</h4>
-            <p>Delta: 偏正 (+) | Theta: 正 (+) | Vega: 負 (-)<br>這是一個「不怕股票大漲，只怕股票大跌」的收租策略。</p></div>
+            <p>Delta: 偏正 (+) | Theta: 正 (+) | Vega: 負 (-)<br>這是一個不怕股票大漲，只怕股票大跌的收租策略。</p></div>
             <div style="margin-bottom: 15px;"><h4 style="color: #0099ff; margin-bottom: 5px;">🎯 履約價挑選指南</h4>
             <ul style="padding-left: 20px;">
                 <li style="margin-bottom: 5px;">Short Put (K1): 挑選 Delta -0.15 ~ -0.25 的支撐位。</li>
@@ -131,7 +131,7 @@ const strategyConfigs = {
         legs: [{id:'K1',label:'Long Call K1'},{id:'P1',label:'P1'},{id:'K2',label:'Short Call K2 (x 2)'},{id:'P2',label:'P2'},{id:'K3',label:'Long Call K3'},{id:'P3',label:'P3'}],
         greekGuide: `
             <div style="margin-bottom: 15px;"><h4 style="color: #0099ff; margin-bottom: 5px;">📊 總體希臘字母特性</h4>
-            <p>Delta: 中立 (0) | Theta: 正 (+) | Vega: 負 (-)<br>這是一個「狙擊手」策略，必須精準預測結算日時股價會落在哪個定點。</p></div>
+            <p>Delta: 中立 (0) | Theta: 正 (+) | Vega: 負 (-)<br>這是一個狙擊手策略，必須精準預測結算日時股價會落在哪個定點。</p></div>
             <div style="margin-bottom: 15px;"><h4 style="color: #0099ff; margin-bottom: 5px;">🎯 履約價挑選指南</h4>
             <ul style="padding-left: 20px;">
                 <li style="margin-bottom: 5px;">Short Legs (K2 x2): 設定在你預測的目標價格。</li>
@@ -148,7 +148,7 @@ const strategyConfigs = {
         legs: [{id:'K1',label:'Long Put K1'},{id:'P1',label:'P1'},{id:'K2',label:'Short Put K2 (x 2)'},{id:'P2',label:'P2'},{id:'K3',label:'Long Put K3'},{id:'P3',label:'P3'}],
         greekGuide: `
             <div style="margin-bottom: 15px;"><h4 style="color: #0099ff; margin-bottom: 5px;">📊 總體希臘字母特性</h4>
-            <p>Delta: 中立 (0) | Theta: 正 (+) | Vega: 負 (-)<br>這是一個「狙擊手」策略，必須精準預測結算日時股價會落在哪個定點。</p></div>
+            <p>Delta: 中立 (0) | Theta: 正 (+) | Vega: 負 (-)<br>這是一個狙擊手策略，必須精準預測結算日時股價會落在哪個定點。</p></div>
             <div style="margin-bottom: 15px;"><h4 style="color: #0099ff; margin-bottom: 5px;">🎯 履約價挑選指南</h4>
             <ul style="padding-left: 20px;">
                 <li style="margin-bottom: 5px;">Short Legs (K2 x2): 設定在你預測的目標價格。</li>
@@ -209,7 +209,15 @@ function calculatePLData(strategy, params) {
 
     switch (strategy) {
         case 'ShortPut':
-            net = P1; nF = `計算過程：收入 P1 = ${P1.toFixed(2)}`; dispMP = `${P1.toFixed(2)} (當股價在 ${K1.toFixed(2)} 之上)`; mPF = `計算過程：獲利上限 = 權利金`; dispML = `無限 (當股價在 ${K1.toFixed(2)} 之下)`; mLF = `說明：風險隨股價下跌無限擴大`; bR = (K1 - P1).toFixed(2); bF = `計算過程：${K1.toFixed(2)} - ${P1.toFixed(2)} = ${bR}`; sDiff = "單腿"; sdF = "說明：無兩腿價差。"; 
+            net = P1; nF = `計算過程：收入 P1 = ${P1.toFixed(2)}`; dispMP = `${P1.toFixed(2)} (當股價在 ${K1.toFixed(2)} 之上)`; mPF = `計算過程：獲利上限 = 權利金`; 
+            if (K1 - net <= 0) {
+                dispML = `無損失 (股價歸零時仍獲利 ${(net - K1).toFixed(2)})`;
+                mLF = `說明：收取的權利金大於履約價風險`;
+            } else {
+                dispML = `${(K1 - net).toFixed(2)} (當股價歸零時)`; 
+                mLF = `說明：S=0 時最大虧損 (K1 - P1)`; 
+            }
+            bR = (K1 - P1).toFixed(2); bF = `計算過程：${K1.toFixed(2)} - ${P1.toFixed(2)} = ${bR}`; sDiff = "單腿"; sdF = "說明：無兩腿價差。"; 
             cPF = `計算過程：P1 - Max(0, K1 - S0) = ${P1.toFixed(2)} - ${vSP1.toFixed(2)} = ${cPV.toFixed(2)}`; break;
         case 'BullPutSpread':
             net = P2 - P1; nF = `計算過程：${P2.toFixed(2)} - ${P1.toFixed(2)} = ${net.toFixed(2)}`; dispMP = `${net.toFixed(2)} (當股價在 ${K2.toFixed(2)} 之上)`; mPF = `計算過程：淨收入 = 獲利上限`; dispML = `${((K2 - K1) - net).toFixed(2)} (當股價在 ${K1.toFixed(2)} 之下)`; mLF = `計算過程：(K2 - K1) - 淨收入 = (${K2.toFixed(2)} - ${K1.toFixed(2)}) - ${net.toFixed(2)} = ${((K2 - K1) - net).toFixed(2)}`; bR = (K2 - net).toFixed(2); bF = `計算過程：${K2.toFixed(2)} - ${net.toFixed(2)} = ${bR}`; sDiff = (K2 - K1).toFixed(2); sdF = `計算過程：${K2.toFixed(2)} - ${K1.toFixed(2)} = ${sDiff}`; 
@@ -232,7 +240,14 @@ function calculatePLData(strategy, params) {
             const icp1 = parseFloat((vLP1 - P1).toFixed(2)); const icp2 = parseFloat((P2 - vSP2).toFixed(2)); const icp3 = parseFloat((P3 - vSC3).toFixed(2)); const icp4 = parseFloat((vLC4 - P4).toFixed(2));
             cPF = `計算過程：(Max(0, K1 - S0) - P1) + (P2 - Max(0, K2 - S0)) + (P3 - Max(0, S0 - K3)) + (Max(0, S0 - K4) - P4) = (${vLP1.toFixed(2)} - ${P1.toFixed(2)}) + (${P2.toFixed(2)} - ${vSP2.toFixed(2)}) + (${P3.toFixed(2)} - ${vSC3.toFixed(2)}) + (${vLC4.toFixed(2)} - ${P4.toFixed(2)}) = ${icp1.toFixed(2)} ${formatSignedNum(icp2)} ${formatSignedNum(icp3)} ${formatSignedNum(icp4)} = ${cPV.toFixed(2)}`; break;
         case 'Strangle':
-            net = P1 + P2; nF = `計算過程：${P1.toFixed(2)} + ${P2.toFixed(2)} = ${net.toFixed(2)}`; dispMP = `${net.toFixed(2)} (當股價介於 ${K1.toFixed(2)} 與 ${K2.toFixed(2)} 之間)`; mPF = `計算過程：權利金總收 = 獲利上限`; dispML = `無限 (當股價突破損益平衡點)`; mLF = `說明：雙向裸賣，風險無限`; bR = `${(K1 - net).toFixed(2)} / ${(K2 + net).toFixed(2)}`; bF = `計算過程：P端:K1-Net | C端:K2+Net`; sDiff = (K2 - K1).toFixed(2); sdF = `計算過程：${K2.toFixed(2)} - ${K1.toFixed(2)} = ${sDiff}`; 
+            net = P1 + P2; nF = `計算過程：${P1.toFixed(2)} + ${P2.toFixed(2)} = ${net.toFixed(2)}`; dispMP = `${net.toFixed(2)} (當股價介於 ${K1.toFixed(2)} 與 ${K2.toFixed(2)} 之間)`; mPF = `計算過程：權利金總收 = 獲利上限`; 
+            if (K1 - net <= 0) {
+                dispML = `無損失 (股價歸零時仍獲利 ${(net - K1).toFixed(2)})`;
+                mLF = `說明：收取的權利金大於 K1 履約價風險`;
+            } else {
+                dispML = `無限 (當股價突破損益平衡點)`; mLF = `說明：雙向裸賣，風險無限`; 
+            }
+            bR = `${(K1 - net).toFixed(2)} / ${(K2 + net).toFixed(2)}`; bF = `計算過程：P端:K1-Net | C端:K2+Net`; sDiff = (K2 - K1).toFixed(2); sdF = `計算過程：${K2.toFixed(2)} - ${K1.toFixed(2)} = ${sDiff}`; 
             const stp1 = parseFloat((P1 - vSP1).toFixed(2)); const stp2 = parseFloat((P2 - vSC2).toFixed(2));
             cPF = `計算過程：(P1 - Max(0, K1 - S0)) + (P2 - Max(0, S0 - K2)) = (${P1.toFixed(2)} - ${vSP1.toFixed(2)}) + (${P2.toFixed(2)} - ${vSC2.toFixed(2)}) = ${stp1.toFixed(2)} ${formatSignedNum(stp2)} = ${cPV.toFixed(2)}`; break;
         case 'CallButterfly':
@@ -244,7 +259,15 @@ function calculatePLData(strategy, params) {
             const pbfp1 = parseFloat((vLP1 - P1).toFixed(2)); const pbfp2 = parseFloat((2 * (P2 - vSP2)).toFixed(2)); const pbfp3 = parseFloat((vLP3 - P3).toFixed(2));
             cPF = `計算過程：(Max(0, K1 - S0) - P1) + 2 * (P2 - Max(0, K2 - S0)) + (Max(0, K3 - S0) - P3) = (${vLP1.toFixed(2)} - ${P1.toFixed(2)}) + 2 * (${P2.toFixed(2)} - ${vSP2.toFixed(2)}) + (${vLP3.toFixed(2)} - ${P3.toFixed(2)}) = ${pbfp1.toFixed(2)} ${formatSignedNum(pbfp2)} ${formatSignedNum(pbfp3)} = ${cPV.toFixed(2)}`; break;
         case 'JadeLizard':
-            net = P1 + (P2 - P3); nF = `計算過程：${P1.toFixed(2)} + (${P2.toFixed(2)} - ${P3.toFixed(2)}) = ${net.toFixed(2)}`; dispMP = `${net.toFixed(2)} (當股價在 ${K2.toFixed(2)} 之上)`; mPF = `計算過程：總收入 = 獲利上限`; dispML = `無限 (當股價在 ${K1.toFixed(2)} 之下)`; mLF = `說明：下行賣權裸賣風險無限`; bR = (K1 - net).toFixed(2); bF = `計算過程：${K1.toFixed(2)} - ${net.toFixed(2)} = ${bR}`; sDiff = "混合"; sdF = "說明：無單一價差。"; 
+            net = P1 + (P2 - P3); nF = `計算過程：${P1.toFixed(2)} + (${P2.toFixed(2)} - ${P3.toFixed(2)}) = ${net.toFixed(2)}`; dispMP = `${net.toFixed(2)} (當股價在 ${K2.toFixed(2)} 之上)`; mPF = `計算過程：總收入 = 獲利上限`; 
+            if (K1 - net <= 0) {
+                dispML = `無損失 (股價歸零時仍獲利 ${(net - K1).toFixed(2)})`;
+                mLF = `說明：收取的權利金大於下行履約價風險`;
+            } else {
+                dispML = `${(K1 - net).toFixed(2)} (當股價歸零時)`; 
+                mLF = `說明：S=0 時下行虧損 (K1 - Net)`;
+            }
+            bR = (K1 - net).toFixed(2); bF = `計算過程：${K1.toFixed(2)} - ${net.toFixed(2)} = ${bR}`; sDiff = "混合"; sdF = "說明：無單一價差。"; 
             const jlp1 = parseFloat((P1 - vSP1).toFixed(2)); const jlp2 = parseFloat((P2 - vSC2).toFixed(2)); const jlp3 = parseFloat((vLC3 - P3).toFixed(2));
             cPF = `計算過程：(P1 - Max(0, K1 - S0)) + (P2 - Max(0, S0 - K2)) + (Max(0, S0 - K3) - P3) = (${P1.toFixed(2)} - ${vSP1.toFixed(2)}) + (${P2.toFixed(2)} - ${vSC2.toFixed(2)}) + (${vLC3.toFixed(2)} - ${P3.toFixed(2)}) = ${jlp1.toFixed(2)} ${formatSignedNum(jlp2)} ${formatSignedNum(jlp3)} = ${cPV.toFixed(2)}`; break;
         case 'PutRatioSpreadBull':
@@ -253,8 +276,16 @@ function calculatePLData(strategy, params) {
             const prs_maxP = (K1 - K2) + net;
             dispMP = `${prs_maxP.toFixed(2)} (當股價等於 ${K2.toFixed(2)})`; 
             mPF = `計算過程：履約價差 ${(K1 - K2).toFixed(2)} + 淨收入 ${net.toFixed(2)} = ${prs_maxP.toFixed(2)}`; 
-            dispML = `無限 (當股價下跌時)`; 
-            mLF = `說明：1 買 2 賣下行風險無限`; 
+
+            const prs_lossAtZero = K1 - 2 * K2 + net;
+            if (prs_lossAtZero >= 0) {
+                dispML = `無損失 (股價歸零時仍獲利 ${prs_lossAtZero.toFixed(2)})`;
+                mLF = `說明：K1 的保護力覆蓋了兩口 K2 的風險，下行無風險`;
+            } else {
+                dispML = `${Math.abs(prs_lossAtZero).toFixed(2)} (當股價歸零時)`;
+                mLF = `計算過程：S=0 時，(2 * K2 - K1) - 淨收入 = ${Math.abs(prs_lossAtZero).toFixed(2)}`;
+            }
+
             bR = (2 * K2 - K1 - net).toFixed(2); 
             bF = `計算過程：2 * ${K2.toFixed(2)} - ${K1.toFixed(2)} - ${net.toFixed(2)} = ${bR}`; 
             sDiff = (K1 - K2).toFixed(2); 
@@ -314,91 +345,116 @@ function generateLogicParams(strategy, S0, IV, DTE) {
     const p = {}; let safetyCheck = false;
     p.IV = IV; p.DTE = DTE; 
     let em = S0 * (IV / 100) * Math.sqrt(DTE / 365);
-    if (em < 2 && S0 > 0) em = 2; 
+    // 強制將最小 EM 綁定標的股價比例，避免低價股引發極端邊界扭曲
+    if (em < S0 * 0.02) em = S0 * 0.02; 
 
+    // 建立一套基於 S0 比例的浮動標準尺規
+    const w1 = S0 * 0.02; // 小寬距
+    const w2 = S0 * 0.05; // 中寬距
+    const pBase = S0 * 0.01; // 基準權利金比例
+    
     while (!safetyCheck) {
         switch (strategy) {
             case 'ShortPut': 
-                p.K1 = roundK(S0 - em - rand(0, 3)); p.P1 = rand(1.5, 5.5); 
+                p.K1 = roundK(S0 - em - rand(0, w1)); p.P1 = roundK(rand(pBase*0.5, pBase*2)); 
                 break;
             case 'BullPutSpread': 
-                p.K2 = roundK(S0 - Math.max(0.5, em / 2) - rand(0, 2)); p.K1 = roundK(p.K2 - rand(3, 8)); 
-                p.P2 = rand(4, 9); p.P1 = rand(1, p.P2 - 0.5); 
+                p.K2 = roundK(S0 - em*0.5 - rand(0, w1)); p.K1 = roundK(p.K2 - rand(w2*0.5, w2*1.5)); 
+                p.P2 = roundK(rand(pBase*1.5, pBase*3)); p.P1 = roundK(rand(pBase*0.2, p.P2 - pBase*0.2)); 
                 break;
             case 'BullCallSpread': 
-                p.K1 = roundK(S0 + rand(0.5, 2)); p.K2 = roundK(p.K1 + rand(4, em)); 
-                p.P1 = rand(5, 12); p.P2 = rand(1, p.P1 - 0.5); 
+                p.K1 = roundK(S0 + rand(0, w1)); p.K2 = roundK(p.K1 + rand(w2*0.5, w2*1.5)); 
+                p.P1 = roundK(rand(pBase*2, pBase*4)); p.P2 = roundK(rand(pBase*0.5, p.P1 - pBase*0.5)); 
                 break;
             case 'BearCallSpread': 
-                p.K1 = roundK(S0 + Math.max(0.5, em / 2) + rand(0, 2)); p.K2 = roundK(p.K1 + rand(4, 8)); 
-                p.P1 = rand(5, 10); p.P2 = rand(1, p.P1 - 0.5); 
+                p.K1 = roundK(S0 + em*0.5 + rand(0, w1)); p.K2 = roundK(p.K1 + rand(w2*0.5, w2*1.5)); 
+                p.P1 = roundK(rand(pBase*1.5, pBase*3)); p.P2 = roundK(rand(pBase*0.2, p.P1 - pBase*0.2)); 
                 break;
             case 'BearPutSpread': 
-                p.K2 = roundK(S0 - rand(0.5, 2)); p.K1 = roundK(p.K2 - rand(4, em)); 
-                p.P2 = rand(6, 12); p.P1 = rand(1, p.P2 - 0.5); 
+                p.K2 = roundK(S0 - rand(0, w1)); p.K1 = roundK(p.K2 - rand(w2*0.5, w2*1.5)); 
+                p.P2 = roundK(rand(pBase*2, pBase*4)); p.P1 = roundK(rand(pBase*0.5, p.P2 - pBase*0.5)); 
                 break;
             case 'PutRatioSpreadBull': 
-                p.K1 = roundK(S0 - rand(1, 3)); 
-                p.K2 = roundK(p.K1 - rand(4, em + 2)); 
-                if (p.K2 >= p.K1) p.K2 = roundK(p.K1 - 2.11);
-                p.P1 = rand(3, 6);
-                let minP2_prs = (p.P1 / 2) + 0.1;
-                let maxP2_prs = Math.min(p.P1 - 0.1, (p.K1 - p.K2 + p.P1) / 2 - 0.1);
-                if(minP2_prs >= maxP2_prs) { p.K2 -= 2; maxP2_prs = Math.min(p.P1 - 0.1, (p.K1 - p.K2 + p.P1) / 2 - 0.1); }
-                p.P2 = rand(minP2_prs, maxP2_prs); 
+                p.K1 = roundK(S0 * rand(0.94, 0.98)); 
+                let maxSpread = p.K1 * 0.25; 
+                let spreadW = roundK(Math.max(S0*0.01, Math.min(rand(w1, em), maxSpread))); 
+                p.K2 = roundK(p.K1 - spreadW); 
+                
+                p.P1 = roundK(spreadW * rand(0.3, 0.6)); 
+                let minP2_prs = (p.P1 / 2) + 0.05; 
+                let maxP2_prs = Math.min(p.P1 - 0.05, (spreadW + p.P1) / 2 - 0.05); 
+                
+                if (minP2_prs >= maxP2_prs) {
+                    minP2_prs = p.P1 * 0.55;
+                    maxP2_prs = p.P1 * 0.90;
+                }
+                p.P2 = roundK(rand(minP2_prs, maxP2_prs)); 
                 break;
             case 'PutBWBBull': 
-                p.K3 = roundK(S0 - rand(1, 3)); 
-                let wR_pbwb = rand(2, 5); p.K2 = roundK(p.K3 - wR_pbwb);
-                let wL_pbwb = wR_pbwb + rand(2, 5); p.K1 = roundK(p.K2 - wL_pbwb);
-                p.P3 = rand(4, 8);
-                p.P1 = rand(0.5, p.P3 - 1.5);
-                let minP2_pbwb = (p.P1 + p.P3) / 2 + 0.1;
-                let maxP2_pbwb = Math.min(p.P3 - 0.1, ((p.K2 - p.K1) - (p.K3 - p.K2) + p.P1 + p.P3) / 2 - 0.05);
+                p.K3 = roundK(S0 - rand(w1*0.5, w1*1.5)); 
+                let wR_pbwb = rand(w2*0.5, w2*1.5); p.K2 = roundK(p.K3 - wR_pbwb);
+                let wL_pbwb = wR_pbwb + rand(w2*0.5, w2*1.5); p.K1 = roundK(p.K2 - wL_pbwb);
+                p.P3 = roundK(rand(pBase*2, pBase*4));
+                p.P1 = roundK(rand(pBase*0.2, p.P3 - pBase*1.0));
+                let minP2_pbwb = (p.P1 + p.P3) / 2 + 0.05;
+                let maxP2_pbwb = Math.min(p.P3 - 0.05, ((p.K2 - p.K1) - (p.K3 - p.K2) + p.P1 + p.P3) / 2 - 0.05);
                 if(minP2_pbwb >= maxP2_pbwb) { 
-                    p.K1 -= 2; 
-                    maxP2_pbwb = Math.min(p.P3 - 0.1, ((p.K2 - p.K1) - (p.K3 - p.K2) + p.P1 + p.P3) / 2 - 0.05); 
+                    p.K1 -= w2; 
+                    maxP2_pbwb = Math.min(p.P3 - 0.05, ((p.K2 - p.K1) - (p.K3 - p.K2) + p.P1 + p.P3) / 2 - 0.05); 
                 }
-                p.P2 = rand(minP2_pbwb, maxP2_pbwb);
+                p.P2 = roundK(rand(minP2_pbwb, maxP2_pbwb));
                 break;
             case 'CallBWBBear': 
-                p.K1 = roundK(S0 + rand(1, 3)); 
-                let wL_cbwb = rand(2, 5); p.K2 = roundK(p.K1 + wL_cbwb);
-                let wR_cbwb = wL_cbwb + rand(2, 5); p.K3 = roundK(p.K2 + wR_cbwb);
-                p.P1 = rand(4, 8);
-                p.P3 = rand(0.5, p.P1 - 1.5);
-                let minP2_cbwb = (p.P1 + p.P3) / 2 + 0.1;
-                let maxP2_cbwb = Math.min(p.P1 - 0.1, ((p.K3 - p.K2) - (p.K2 - p.K1) + p.P1 + p.P3) / 2 - 0.05);
+                p.K1 = roundK(S0 + rand(w1*0.5, w1*1.5)); 
+                let wL_cbwb = rand(w2*0.5, w2*1.5); p.K2 = roundK(p.K1 + wL_cbwb);
+                let wR_cbwb = wL_cbwb + rand(w2*0.5, w2*1.5); p.K3 = roundK(p.K2 + wR_cbwb);
+                p.P1 = roundK(rand(pBase*2, pBase*4));
+                p.P3 = roundK(rand(pBase*0.2, p.P1 - pBase*1.0));
+                let minP2_cbwb = (p.P1 + p.P3) / 2 + 0.05;
+                let maxP2_cbwb = Math.min(p.P1 - 0.05, ((p.K3 - p.K2) - (p.K2 - p.K1) + p.P1 + p.P3) / 2 - 0.05);
                 if(minP2_cbwb >= maxP2_cbwb) { 
-                    p.K3 += 2; 
-                    maxP2_cbwb = Math.min(p.P1 - 0.1, ((p.K3 - p.K2) - (p.K2 - p.K1) + p.P1 + p.P3) / 2 - 0.05); 
+                    p.K3 += w2; 
+                    maxP2_cbwb = Math.min(p.P1 - 0.05, ((p.K3 - p.K2) - (p.K2 - p.K1) + p.P1 + p.P3) / 2 - 0.05); 
                 }
-                p.P2 = rand(minP2_cbwb, maxP2_cbwb);
+                p.P2 = roundK(rand(minP2_cbwb, maxP2_cbwb));
                 break;
             case 'IronCondor': 
-                p.K2 = roundK(S0 - em - rand(1, 3)); p.K1 = roundK(p.K2 - rand(4, 8)); 
-                p.K3 = roundK(S0 + em + rand(1, 3)); p.K4 = roundK(p.K3 + rand(4, 8)); 
-                p.P2 = rand(3, 5); p.P1 = rand(1, p.P2 - 0.5); p.P3 = rand(3, 5); p.P4 = rand(1, p.P3 - 0.5); 
+                p.K2 = roundK(S0 - em - rand(w1*0.5, w1*1.5)); p.K1 = roundK(p.K2 - rand(w2*0.5, w2*1.5)); 
+                p.K3 = roundK(S0 + em + rand(w1*0.5, w1*1.5)); p.K4 = roundK(p.K3 + rand(w2*0.5, w2*1.5)); 
+                p.P2 = roundK(rand(pBase*1.5, pBase*2.5)); p.P1 = roundK(rand(pBase*0.2, p.P2 - pBase*0.5)); 
+                p.P3 = roundK(rand(pBase*1.5, pBase*2.5)); p.P4 = roundK(rand(pBase*0.2, p.P3 - pBase*0.5)); 
                 if ((p.P2 - p.P1 + p.P3 - p.P4) >= Math.min(p.K2-p.K1, p.K4-p.K3)) {
-                    p.K1 -= 2; p.K4 += 2;
+                    p.K1 -= w2; p.K4 += w2;
                 }
                 break;
             case 'CallButterfly': 
+                const wCB = roundK(rand(w2, w2*2)); 
+                p.K2 = roundK(S0 + rand(-w1*0.5, w1*0.5)); 
+                p.K1 = roundK(p.K2 - wCB); p.K3 = roundK(p.K2 + wCB); 
+                p.P1 = roundK(rand(pBase*3, pBase*5)); 
+                p.P2 = roundK(rand(pBase*1, p.P1/2 - pBase*0.1)); 
+                p.P3 = roundK(rand(0.05, p.P1 - 2*p.P2 - 0.05)); 
+                break;
             case 'PutButterfly':
-                const w = rand(5, 10); 
-                p.K2 = roundK(S0 + rand(-0.5, 0.5)); 
-                p.K1 = roundK(p.K2 - w); p.K3 = roundK(p.K2 + w); 
-                p.P2 = rand(3, 6); p.P3 = rand(0.5, p.P2 - 1); p.P1 = rand(2 * p.P2 - p.P3 + 0.2, 2 * p.P2 - p.P3 + 3); 
+                // 【精準修復】正確還原 Put 權利金 P1 < P2 < P3 邏輯
+                const wPB = roundK(rand(w2, w2*2)); 
+                p.K2 = roundK(S0 + rand(-w1*0.5, w1*0.5)); 
+                p.K1 = roundK(p.K2 - wPB); p.K3 = roundK(p.K2 + wPB); 
+                p.P3 = roundK(rand(pBase*3, pBase*5)); 
+                p.P2 = roundK(rand(pBase*1, p.P3/2 - pBase*0.1)); 
+                p.P1 = roundK(rand(0.05, p.P3 - 2*p.P2 - 0.05)); 
                 break;
             case 'JadeLizard': 
-                p.K1 = roundK(S0 - em - rand(2, 5)); p.K2 = roundK(S0 + em + rand(0, 3)); 
-                p.K3 = roundK(p.K2 + rand(4, 8)); 
-                p.P2 = rand(4, 7); p.P3 = rand(1, p.P2 - 0.5); 
-                p.P1 = rand(Math.max(0.5, p.K3 - p.K2 - (p.P2 - p.P3)), p.K3 - p.K2 - (p.P2 - p.P3) + 2);
+                p.K1 = roundK(S0 - em - rand(w2*0.5, w2*1.5)); 
+                p.K2 = roundK(S0 + em + rand(0, w1)); 
+                p.K3 = roundK(p.K2 + rand(w2*0.8, w2*2)); 
+                p.P2 = roundK(rand(pBase*2, pBase*4)); p.P3 = roundK(rand(pBase*0.5, p.P2 - pBase*0.5)); 
+                let jl_minP1 = Math.max(pBase*0.5, (p.K3 - p.K2) - (p.P2 - p.P3) + 0.1);
+                p.P1 = roundK(rand(jl_minP1, jl_minP1 + pBase*2));
                 break;
             case 'Strangle': 
-                p.K1 = roundK(S0 - em - rand(2, 6)); p.K2 = roundK(S0 + em + rand(2, 6)); 
-                p.P1 = rand(3, 7); p.P2 = rand(3, 7); 
+                p.K1 = roundK(S0 - em - rand(w2*0.5, w2*2)); p.K2 = roundK(S0 + em + rand(w2*0.5, w2*2)); 
+                p.P1 = roundK(rand(pBase*1.5, pBase*3.5)); p.P2 = roundK(rand(pBase*1.5, pBase*3.5)); 
                 break;
             default: p.K1 = S0-5; p.K2 = S0+5; p.P1 = 2; p.P2 = 2;
         }
@@ -407,9 +463,15 @@ function generateLogicParams(strategy, S0, IV, DTE) {
         if (strategy.includes('Spread') && !strategy.includes('BWB')) { 
             validSpread = (Math.abs(p.P1-p.P2) < Math.abs(p.K1-p.K2));
         }
-        let positiveStrikes = Object.keys(p).every(k => !k.startsWith('K') || p[k] >= 0);
+        let positiveStrikes = Object.keys(p).every(k => !k.startsWith('K') || p[k] > 0);
         if (validSpread && positiveStrikes) { safetyCheck = true; }
     }
+    
+    // 二次強制防護：如果在隨機運算中不小心踩到底線，手動將其拉回安全區域
+    if (strategy === 'JadeLizard' && p.K1 - (p.P1 + p.P2 - p.P3) <= 0) p.K1 = roundK(p.P1 + p.P2 - p.P3 + S0*0.1);
+    if (strategy === 'Strangle' && p.K1 - (p.P1 + p.P2) <= 0) p.K1 = roundK(p.P1 + p.P2 + S0*0.1);
+    if (strategy === 'ShortPut' && p.K1 - p.P1 <= 0) p.K1 = roundK(p.P1 + S0*0.1);
+
     for (let k in p) { 
         if (k !== 'DTE' && k !== 'IV') p[k] = parseFloat(p[k].toFixed(2)); 
     }
@@ -417,9 +479,9 @@ function generateLogicParams(strategy, S0, IV, DTE) {
     const lower1SD = S0 - em;
     const upper1SD = S0 + em;
 
-    let logicText = `系統產生了 <b>S0 = $${S0.toFixed(2)}</b>, <b>IV = ${IV.toFixed(2)}%</b>, <b>DTE = ${DTE} 天</b> 的環境，算出的 1 SD 波動區間為 <b>±$${em.toFixed(2)} ($${lower1SD.toFixed(2)} ~ $${upper1SD.toFixed(2)})</b>。<br>`;
+    let logicText = `系統產生了 S0 = $${S0.toFixed(2)}, IV = ${IV.toFixed(2)}%, DTE = ${DTE} 天 的環境，算出的 1 SD 波動區間為 ±$${em.toFixed(2)} ($${lower1SD.toFixed(2)} ~ $${upper1SD.toFixed(2)})。<br>`;
     if(strategy.includes('ShortPut') || strategy.includes('IronCondor') || strategy.includes('Strangle') || strategy.includes('BearCallSpread') || strategy.includes('BullPutSpread') || strategy.includes('JadeLizard')) {
-        logicText += `💡 為了確保你的收租策略具備高勝率，教練已幫你把「賣出腳」刻意配置在 1 SD 預期暴風圈之外。`;
+        logicText += `💡 為了確保你的收租策略具備高勝率，教練已幫你把賣出腳刻意配置在 1 SD 預期暴風圈之外。`;
     } else if (strategy.includes('BullCallSpread') || strategy.includes('BearPutSpread')) {
         logicText += `💡 這是一個買方攻擊策略，教練幫你把買入腳放在現價外 (OTM)，並把賣出腳 (停利點) 設定在 1 SD 區間內，這是一個勝率較高且實際達陣機率大的配置。`;
     } else {
@@ -494,12 +556,14 @@ function validateStrategyAndRenderCoach(analysis) {
         case 'ShortPut':
             if (P1 <= 0) addError(['P1'], `必須收取權利金 (P1 > 0)。`);
             if (K1 >= S0) addError(['K1'], `您的賣出腳 (K1) 必須小於現價 (S0)，確保在價外 OTM 建倉。`);
+            if (K1 - netPremium <= 0) addError(['K1', 'P1'], `極端防護：您設定的權利金收得比履約價 K1 還多，導致下方出現無風險獲利狀態，請調高 K1 或減少 P1。`);
             if (K1 > lower1SD) warnings.push(`賣出腳 (K1) 掉進 1 SD 暴風圈內，勝率堪憂。`);
             break;
         case 'BullPutSpread':
             if (K1 >= K2) addError(['K1', 'K2'], `K1 (買入保險) 必須小於 K2 (賣出收租)。`);
             if (P1 >= P2) addError(['P1', 'P2'], `P1 (較遠價外) 應比 P2 便宜。請確認報價是否填反。`);
             if (netPremium <= 0) addError(['P1', 'P2'], `收支錯誤：應為淨收入 (Credit)，請拓寬 K1 與 K2 價差。`);
+            if (netPremium >= (K2 - K1)) addError(['P1', 'P2'], `真實市場防護：淨收入不得大於或等於履約價差，否則會產生無風險套利。`);
             if (K2 >= S0) addError(['K2'], `收租腳 (K2) 應設在現價之下 (OTM)。`);
             if (K2 > lower1SD) warnings.push(`主要收租腳 (K2) 已掉入 1 SD 暴風圈內。`);
             break;
@@ -507,6 +571,7 @@ function validateStrategyAndRenderCoach(analysis) {
             if (K1 >= K2) addError(['K1', 'K2'], `K1 (賣出收租) 必須小於 K2 (買入保險)。`);
             if (P1 <= P2) addError(['P1', 'P2'], `P1 (較靠近現價) 應比 P2 貴。`);
             if (netPremium <= 0) addError(['P1', 'P2'], `收支錯誤：應為淨收入 (Credit)。`);
+            if (netPremium >= (K2 - K1)) addError(['P1', 'P2'], `真實市場防護：淨收入不得大於或等於履約價差，否則會產生無風險套利。`);
             if (K1 <= S0) addError(['K1'], `收租腳 (K1) 應嚴格大於現價 (OTM)。`);
             if (K1 < upper1SD) warnings.push(`主要收租腳 (K1) 已掉入 1 SD 暴風圈內。`);
             break;
@@ -515,23 +580,27 @@ function validateStrategyAndRenderCoach(analysis) {
             if (K2 > S0) addError(['K2'], `K2 (買入腳) 必須不大於現價 (S0)，確保在價外或平值。`);
             if (P1 >= P2) addError(['P1', 'P2'], `P1 應該比 P2 便宜。`);
             if (netPremium >= 0) addError(['P1', 'P2'], `此策略應為淨支出 (Debit)。`);
+            if (Math.abs(netPremium) >= (K2 - K1)) addError(['P1', 'P2'], `真實市場防護：淨支出不得大於或等於履約價差。`);
             break;
         case 'BullCallSpread':
             if (K1 >= K2) addError(['K1', 'K2'], `K1 (買入腳) 必須小於 K2 (賣出腳)。`);
             if (K1 < S0) addError(['K1'], `K1 (買入腳) 必須不小於現價 (S0)，確保在價外或平值。`);
             if (P1 <= P2) addError(['P1', 'P2'], `P1 應該比 P2 貴。`);
             if (netPremium >= 0) addError(['P1', 'P2'], `此策略應為淨支出 (Debit)。`);
+            if (Math.abs(netPremium) >= (K2 - K1)) addError(['P1', 'P2'], `真實市場防護：淨支出不得大於或等於履約價差。`);
             break;
         case 'IronCondor':
             if (!(K1 < K2 && K2 < S0 && S0 < K3 && K3 < K4)) addError(['K1', 'K2', 'K3', 'K4'], `履約價必須包圍現價：K1 < K2 < S0 < K3 < K4。`);
             if (P1 >= P2 || P4 >= P3) addError(['P1', 'P2', 'P3', 'P4'], `保險腳必須比收租腳便宜。`);
             if (netPremium <= 0) addError(['P1', 'P2', 'P3', 'P4'], `收支錯誤：應為淨收入 (Credit)。`);
-            if (netPremium >= Math.min(K2-K1, K4-K3)) addError(['P1', 'P2', 'P3', 'P4'], `定價錯誤：淨收入不得大於或等於最小翼展，否則產生無風險套利空間！`);
+            if (netPremium >= Math.min(K2-K1, K4-K3)) addError(['P1', 'P2', 'P3', 'P4'], `真實市場防護：淨收入不得大於或等於最小翼展，否則產生無風險套利空間。`);
             if (K2 > lower1SD || K3 < upper1SD) warnings.push(`鐵籠區間太窄，已包在 1 SD 暴風圈以內。`);
             break;
         case 'Strangle':
             if (!(K1 < S0 && S0 < K2)) addError(['K1', 'K2'], `賣出腳 (K1, K2) 必須分居現價 (S0) 兩側 (OTM)。`);
             if (P1 <= 0 || P2 <= 0) addError(['P1', 'P2'], `必須收取權利金。`);
+            // 【精準攔截】防止 S0 極低時，產生左側沒有最大虧損的無限獲利 Bug
+            if (K1 - netPremium <= 0) addError(['K1', 'P1', 'P2'], `極端防護錯誤：您設定的 K1 過低或權利金過高，導致下檔風險消失呈現獲利狀態，這在真實市場不成立，請提高 K1 或減少權利金。`);
             if (K1 > lower1SD || K2 < upper1SD) warnings.push(`雙向裸賣風險極高，您的部位太貼近現價 (1 SD 暴風圈內)。`);
             break;
         case 'CallButterfly':
@@ -539,19 +608,24 @@ function validateStrategyAndRenderCoach(analysis) {
             if (Math.abs((K2-K1) - (K3-K2)) > 0.05) addError(['K1', 'K2', 'K3'], `左右兩翼必須完全等寬。`);
             if (!(P1 > P2 && P2 > P3)) addError(['P1', 'P2', 'P3'], `Call 權利金應符合 P1 > P2 > P3。`);
             if (netPremium >= 0) addError(['P1', 'P2', 'P3'], `此策略應為淨支出 (Debit)。`);
+            if (Math.abs(netPremium) >= (K2 - K1)) addError(['P1', 'P2', 'P3'], `真實市場防護：淨支出不得大於或等於單側翼展寬度。`);
             if (Math.abs(K2 - S0) > em * 0.5) warnings.push(`蝴蝶的身體 (K2) 偏離現價過多，這將導致極低的獲利機率。`);
             break;
         case 'PutButterfly':
             if (!(K1 < K2 && K2 < K3)) addError(['K1', 'K2', 'K3'], `履約價順序錯誤：必須為 K1 < K2 < K3。`);
             if (Math.abs((K2-K1) - (K3-K2)) > 0.05) addError(['K1', 'K2', 'K3'], `左右兩翼必須完全等寬。`);
-            if (!(P1 < P2 && P2 < P3)) addError(['P1', 'P2', 'P3'], `Put 權利金應符合 P1 < P2 < P3。`);
+            // 【精準攔截】強制檢查 Put 的正向遞增邏輯
+            if (!(P1 < P2 && P2 < P3)) addError(['P1', 'P2', 'P3'], `Put 權利金應符合 P1 < P2 < P3 (越深入價內的 Put 權利金必須越貴)。`);
             if (netPremium >= 0) addError(['P1', 'P2', 'P3'], `此策略應為淨支出 (Debit)。`);
+            if (Math.abs(netPremium) >= (K2 - K1)) addError(['P1', 'P2', 'P3'], `真實市場防護：淨支出不得大於或等於單側翼展寬度。`);
             if (Math.abs(K2 - S0) > em * 0.5) warnings.push(`蝴蝶的身體 (K2) 偏離現價過多，這將導致極低的獲利機率。`);
             break;
         case 'JadeLizard':
             if (!(K1 < S0 && S0 < K2 && K2 < K3)) addError(['K1', 'K2', 'K3'], `履約價必須符合 K1 < S0 < K2 < K3 (全價外)。`);
             if (P1 <= 0 || P2 <= P3) addError(['P1', 'P2', 'P3'], `權利金邏輯錯誤，請確保 P1 > 0 且 P2 > P3。`);
-            if (netPremium < (K3 - K2)) addError(['P1', 'P2', 'P3', 'K2', 'K3'], `嚴重風險：總淨收入必須 ≥ (K3-K2) 寬度，否則上漲會虧損！`);
+            if (netPremium < (K3 - K2)) addError(['P1', 'P2', 'P3', 'K2', 'K3'], `嚴重風險：總淨收入必須 ≥ (K3-K2) 寬度，否則上漲會虧損。`);
+            // 【精準攔截】防止 S0 極低時，產生左側沒有最大虧損的無限獲利 Bug
+            if (K1 - netPremium <= 0) addError(['K1', 'P1', 'P2', 'P3'], `極端防護錯誤：您設定的 K1 過低或淨收入過高，導致下檔風險完全消失。這在真實市場中不合理，請提高 K1 或減少權利金。`);
             if (K1 > lower1SD) warnings.push(`賣出 Put (K1) 防禦空間過小 (在 1 SD 內)。`);
             break;
         case 'PutRatioSpreadBull':
@@ -559,7 +633,12 @@ function validateStrategyAndRenderCoach(analysis) {
             if (K2 >= K1) addError(['K1', 'K2'], `K2 (賣出腳) 必須小於 K1 (買入腳)。`);
             if (P2 >= P1) addError(['P1', 'P2'], `P2 (遠價外) 必須小於 P1 (近現價)。`);
             if (netPremium < 0) addError(['P1', 'P2'], `嚴重錯誤：此策略建倉必須是零成本或淨收入 (Net Credit ≥ 0)。`);
-            if (netPremium >= (K1 - K2)) addError(['P1', 'P2'], `定價錯誤：淨收入不得大於或等於翼展 (${(K1-K2).toFixed(2)})，否則存在無風險套利空間！`);
+            if (netPremium >= (K1 - K2)) addError(['P1', 'P2'], `真實市場防護：淨收入不得大於或等於翼展 (${(K1-K2).toFixed(2)})，否則存在無風險套利空間。`);
+            
+            const prs_lossAtZero = K1 - 2 * K2 + netPremium;
+            if (prs_lossAtZero >= 0) {
+                addError(['K1', 'K2'], `防護比例嚴重失衡：您的 K2 過低，導致下檔呈現無風險狀態。真實市場無法在這種懸殊比例下取得淨收入 (Credit)，請縮小 K1 與 K2 的價差！`);
+            }
             if (K2 > lower1SD) warnings.push(`您的主要賣出腳 (K2) 距離現價太近，下檔防禦不足。`);
             break;
         case 'PutBWBBull':
@@ -568,7 +647,7 @@ function validateStrategyAndRenderCoach(analysis) {
             if ((K2-K1) <= (K3-K2)) addError(['K1', 'K2', 'K3'], `左側翼展必須大於右側，否則無法擠出 Credit。`);
             if (P1 >= P2 || P2 >= P3) addError(['P1', 'P2', 'P3'], `權利金應符合 P1 < P2 < P3。`);
             if (netPremium <= 0) addError(['P1', 'P2', 'P3'], `嚴重錯誤：必須為淨收入 (Credit) 才能確保上漲無風險。`);
-            if (netPremium >= ((K2 - K1) - (K3 - K2))) addError(['P1', 'P2', 'P3'], `定價錯誤：淨收入不得大於最大可能虧損邊界 (${((K2 - K1) - (K3 - K2)).toFixed(2)})，否則產生無風險套利空間！`);
+            if (netPremium >= ((K2 - K1) - (K3 - K2))) addError(['P1', 'P2', 'P3'], `真實市場防護：淨收入不得大於最大可能虧損邊界 (${((K2 - K1) - (K3 - K2)).toFixed(2)})，否則產生無風險套利空間。`);
             if (K2 > lower1SD) warnings.push(`您的主要賣出腳 (K2) 距離現價太近，下檔防禦不足。`);
             break;
         case 'CallBWBBear':
@@ -577,7 +656,7 @@ function validateStrategyAndRenderCoach(analysis) {
             if ((K3-K2) <= (K2-K1)) addError(['K1', 'K2', 'K3'], `右側翼展必須大於左側，否則無法擠出 Credit。`);
             if (P1 <= P2 || P2 <= P3) addError(['P1', 'P2', 'P3'], `權利金應符合 P1 > P2 > P3。`);
             if (netPremium <= 0) addError(['P1', 'P2', 'P3'], `嚴重錯誤：必須為淨收入 (Credit) 才能確保下跌無風險。`);
-            if (netPremium >= ((K3 - K2) - (K2 - K1))) addError(['P1', 'P2', 'P3'], `定價錯誤：淨收入不得大於最大可能虧損邊界 (${((K3 - K2) - (K2 - K1)).toFixed(2)})，否則產生無風險套利空間！`);
+            if (netPremium >= ((K3 - K2) - (K2 - K1))) addError(['P1', 'P2', 'P3'], `真實市場防護：淨收入不得大於最大可能虧損邊界 (${((K3 - K2) - (K2 - K1)).toFixed(2)})，否則產生無風險套利空間。`);
             if (K2 < upper1SD) warnings.push(`您的主要賣出腳 (K2) 距離現價太近，上檔防禦不足。`);
             break;
     }
@@ -684,8 +763,8 @@ function analyzeSpread() {
 
         let maxPText = currentAnalysis.maxProfit.split(" ")[0];
         let maxLText = currentAnalysis.maxLoss.split(" ")[0];
-        document.getElementById('legMaxProfitValue').textContent = maxPText.includes('無限') ? '無限' : '$' + maxPText;
-        document.getElementById('legMaxLossValue').textContent = maxLText.includes('無限') ? '無限' : '$' + maxLText;
+        document.getElementById('legMaxProfitValue').textContent = maxPText.includes('無限') || maxPText.includes('無損失') ? maxPText : '$' + maxPText;
+        document.getElementById('legMaxLossValue').textContent = maxLText.includes('無限') || maxLText.includes('無損失') ? maxLText : '$' + maxLText;
     } else {
         document.getElementById('legBEPText').textContent = "";
         document.getElementById('leg1SDText').textContent = "";
@@ -742,7 +821,7 @@ function analyzeSpread() {
         const el = document.getElementById(id);
         if(!el) return;
         if (isAllZero) { el.style.color = '#ffffff'; return; }
-        if (valStr.includes('無限')) {
+        if (valStr.includes('無限') || valStr.includes('無損失')) {
             el.style.color = isProfit ? '#28a745' : '#dc3545';
         } else {
             const val = parseFloat(valStr);
@@ -767,11 +846,11 @@ function analyzeSpread() {
         const evalResult = validateStrategyAndRenderCoach(currentAnalysis);
 
         if (evalResult.status === 'empty') {
-            coachContainer.innerHTML = `<div class="coach-prompt-box">💡 <b>教練提示：</b><br>請先填寫 <b>標的現價 (S0)、標的 ATM IV %、到期天數 (DTE)</b>，教練才能為您計算出 1 SD 市場預期波動區間喔！</div>`;
+            coachContainer.innerHTML = `<div class="coach-prompt-box">💡 教練提示：<br>請先填寫 標的現價 (S0)、標的 ATM IV %、到期天數 (DTE)，教練才能為您計算出 1 SD 市場預期波動區間喔！</div>`;
         } else if (evalResult.status === 'incomplete') {
             coachContainer.innerHTML = `
                 <div class="coach-prompt-box">
-                    🎯 <b>教練提示：</b><br>目前的 1 SD 區間為 <b>$${evalResult.lower1SD.toFixed(2)} ~ $${evalResult.upper1SD.toFixed(2)}</b>。<br>不知道履約價該怎麼設定嗎？點擊下方按鈕，教練為您示範一組高勝率的參考配置！
+                    🎯 教練提示：<br>目前的 1 SD 區間為 $${evalResult.lower1SD.toFixed(2)} ~ $${evalResult.upper1SD.toFixed(2)}。<br>不知道履約價該怎麼設定嗎？點擊下方按鈕，教練為您示範一組高勝率的參考配置！
                 </div>
                 <div class="action-buttons">
                     <button onclick="clearAllInputs()" class="clear-btn">🧹 清除重置</button>
@@ -779,7 +858,7 @@ function analyzeSpread() {
                 </div>
             `;
         } else if (evalResult.status === 'error') {
-            let warnHtml = `<div class="risk-alert-box"><strong>❌ 參數邏輯錯誤：</strong><ul>`;
+            let warnHtml = `<div class="risk-alert-box">❌ 參數邏輯錯誤：<ul>`;
             evalResult.errors.forEach(w => warnHtml += `<li>${w}</li>`);
             warnHtml += `</ul><div style="margin-top:8px; font-size:0.95em; color:#ccc;">請修正紅框標示的欄位，或讓教練為您重新配置標準參數。</div></div>
             <div class="action-buttons">
@@ -788,7 +867,7 @@ function analyzeSpread() {
             </div>`;
             coachContainer.innerHTML = warnHtml;
         } else if (evalResult.status === 'warning') {
-            let warnHtml = `<div class="risk-alert-box" style="border-left-color: #ffc107;"><strong>⚠️ 實戰風險警告：</strong><ul>`;
+            let warnHtml = `<div class="risk-alert-box" style="border-left-color: #ffc107;">⚠️ 實戰風險警告：<ul>`;
             evalResult.warnings.forEach(w => warnHtml += `<li style="color:#ffc107;">${w}</li>`);
             warnHtml += `</ul><div style="margin-top:8px; font-size:0.95em; color:#ccc;">您可以在真實市場中手動調整，或點擊下方由教練為您修復。</div></div>
             <div class="action-buttons">
@@ -799,12 +878,12 @@ function analyzeSpread() {
         } else {
             if (justSmartAdjusted) {
                 coachContainer.innerHTML = `
-                <div class="smart-adjust-success">✅ <b>智能調整完畢！</b><br>已為您配置符合標準圖形且推移至安全邊界的實戰參數。<br><br>💡 <b>${strategyConfigs[strategy].adjustHint || "請觀察圖表與數值變化，這是在真實市場中提高勝率的標準配置。"}</b></div>
+                <div class="smart-adjust-success">✅ 智能調整完畢！<br>已為您配置符合標準圖形且推移至安全邊界的實戰參數。<br><br>💡 ${strategyConfigs[strategy].adjustHint || "請觀察圖表與數值變化，這是在真實市場中提高勝率的標準配置。"}</div>
                 <div class="action-buttons"><button onclick="clearAllInputs()" class="clear-btn" style="flex: 1;">🧹 清除重置</button></div>`;
                 justSmartAdjusted = false;
             } else {
                 coachContainer.innerHTML = `
-                <div class="smart-adjust-success">✅ <b>教練檢測通過！</b><br>您的配置非常優秀！參數完全符合策略邏輯與防套利風控，這能為您確保高勝率的基礎。</div>
+                <div class="smart-adjust-success">✅ 教練檢測通過！<br>您的配置非常優秀！參數完全符合策略邏輯與防套利風控，這能為您確保高勝率的基礎。</div>
                 <div class="action-buttons"><button onclick="clearAllInputs()" class="clear-btn" style="flex: 1;">🧹 清除重置</button></div>`;
             }
         }
@@ -1021,7 +1100,7 @@ function drawChart(analysis) {
                 const fontSize = Math.min(45, (right - left) / 10);
                 
                 ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
-                ctx.font = `bold ${fontSize}px Arial`;
+                ctx.font = `${fontSize}px Arial`;
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
                 ctx.fillText(strategyName, (left + right) / 2, (top + bottom) / 2);
@@ -1077,26 +1156,22 @@ function drawChart(analysis) {
     });
 }
 
-// ================= 版面切換邏輯 (全新修改) =================
 function toggleLayout() {
     const container = document.querySelector('.container');
-    // 以 992px 為電腦/手機版界線
     const isMobileView = window.innerWidth <= 992; 
 
     if (isMobileView) {
-        // 目前為小螢幕 (預設是直式)
         if (container.classList.contains('force-horizontal')) {
-            container.classList.remove('force-horizontal'); // 切回直式
+            container.classList.remove('force-horizontal');
         } else {
-            container.classList.add('force-horizontal');    // 強制橫式
+            container.classList.add('force-horizontal');    
             container.classList.remove('force-vertical');
         }
     } else {
-        // 目前為大螢幕 (預設是橫式)
         if (container.classList.contains('force-vertical')) {
-            container.classList.remove('force-vertical');   // 切回橫式
+            container.classList.remove('force-vertical');   
         } else {
-            container.classList.add('force-vertical');      // 強制直式
+            container.classList.add('force-vertical');      
             container.classList.remove('force-horizontal');
         }
     }
@@ -1106,13 +1181,11 @@ function toggleLayout() {
     }
 }
 
-// 監聽視窗大小改變，確保圖表自動適應，並在跨越裝置斷點時重繪圖表
 window.addEventListener('resize', () => {
     if (profitChartInstance) {
         profitChartInstance.resize();
     }
 });
-// =======================================================
 
 function fallbackCopyTextToClipboard(text) {
     const textArea = document.createElement("textarea");
@@ -1269,7 +1342,7 @@ function updateInputs(overrideS0 = null, overrideIV = null, overrideDTE = null, 
     descDiv.style.color = '#ffffff'; 
     descDiv.style.fontSize = '14px';
     descDiv.style.borderRadius = '0 4px 4px 0';
-    descDiv.innerHTML = `💡 <strong>策略方向：</strong>${config.desc}`;
+    descDiv.innerHTML = `💡 策略方向：${config.desc}`;
     c.appendChild(descDiv);
 
     const modalBtn = document.createElement('button');
@@ -1385,7 +1458,7 @@ function generateQuiz() {
     let opts = [cVal]; 
     while(opts.length < 4) { 
         let f = "";
-        if (cVal === "無限") {
+        if (cVal === "無限" || cVal === "無損失") {
             f = (parseFloat(currentAnalysis.netPremium) + rand(10, 80)).toFixed(2);
         } else if (cVal.includes("/")) {
             let parts = cVal.match(/[\d.]+/g);
